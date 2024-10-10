@@ -17,18 +17,18 @@ public class PrimeiroJava {
         //ver se é par 
         System.out.println("Digite um numero: ");
         int x = read.nextInt();
-        if(seÉPar(x)) {
+        if(seEhPar(x)) {
             System.out.println("É par");
         }
         else {
             System.out.println("É impar");
         }
 
-        //dividir dois reais
+        /*dividir dois reais
         float y = read.nextFloat();
         float z = read.nextFloat();
-        System.out.println(dividirDois(y,z));
-        
+        System.out.println(dividirDois(y,z));*/
+        System.out.println(dividirDois(read.nextFloat(),read.nextFloat()));
     }
     
     public static float dividirDois(float a,float b) {
@@ -38,7 +38,7 @@ public class PrimeiroJava {
         return a / b;
     }
 
-    public static boolean seÉPar(int a) {
+    public static boolean seEhPar(int a) {
         //verifica se o numero "a" é par ou não
         return a % 2 == 0;
     }
