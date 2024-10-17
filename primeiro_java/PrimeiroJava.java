@@ -6,7 +6,6 @@ public class PrimeiroJava {
     
     public static void main(String[] args) {
         Scanner read = new Scanner(System.in);
-
         //somar tres num
         System.out.print("Digite 3 numeros\n->");
         int a = read.nextInt();

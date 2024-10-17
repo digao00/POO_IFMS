@@ -1,5 +1,6 @@
 public class Baskara {
     private double a,b,c;
+    
     public void setCoef(double a, double b, double c) {
         this.a = a;
         this.b = b;
