@@ -2,6 +2,16 @@ package produto;
 
 public class Produto {
 
+    //construtores
+    
+    Produto() {}
+    Produto(int codigo, String descricao, String validade, float preco) {
+        this.codigo = codigo;
+        this.descricao = descricao;
+        this.validade = validade;
+        this.preco = preco;
+    }
+
     private int codigo;
 
     public int getCodigo() {
@@ -14,7 +24,7 @@ public class Produto {
         }
         else {
             this.codigo = codigo;
-        }
+        }                                                                                                                       
     }
 
 
@@ -28,6 +38,7 @@ public class Produto {
         this.descricao = descricao;
     }
 
+
     private String validade;
     
     public String getValidade() {
@@ -37,6 +48,7 @@ public class Produto {
     public void setValidade(String validade) {
         this.validade = validade;
     }
+
 
     private float preco;
 
