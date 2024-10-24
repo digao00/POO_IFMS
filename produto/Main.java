@@ -6,7 +6,6 @@ public class Main {
         Produto pika = new Produto(200, "asd", "adad", 4);
         pika.print();
         penis.print();
-        pika.setPreco(-4);
     }
     
 }

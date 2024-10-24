@@ -5,6 +5,7 @@ public class Produto {
     //construtores
     
     Produto() {}
+
     Produto(int codigo, String descricao, String validade, float preco) {
         this.codigo = codigo;
         this.descricao = descricao;
@@ -13,6 +14,7 @@ public class Produto {
     }
 
     private int codigo;
+    
 
     public int getCodigo() {
         return codigo;
