@@ -13,12 +13,7 @@ public class Circulo {
         return (float)Math.PI*(raio*raio);
     }
     public boolean intercecta(Circulo circulo) {
-        if (centro.distancia(this.centro) < raio + this.raio) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return centro.distancia(this.centro) < raio + this.raio;
     }
     public void print() {
         System.out.printf("\nRaio: %.2f\nCentro: (%.2f,%.2f)", raio, centro.getX(), centro.getY());

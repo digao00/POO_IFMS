@@ -13,6 +13,11 @@ public class Main {
         System.out.println("\nDistancia entre A e B: " + d);
         System.out.println("Area do retangulo: " + r.area());
         System.out.println("Perimetro do retangulo: " + r.perimetro());
-        System.out.println(c1.intercecta(c2));
+        if (c1.intercecta(c2)) {
+            System.out.println("\nCirculos se sobrepoem");
+        }
+        else {
+            System.out.println("\nCírculos distantes");
+        }
     }
 }
