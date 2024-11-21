@@ -10,6 +10,6 @@ public class Main {
         poo.addEstudante(e1);
         poo.addEstudante(e3);
         poo.addEstudante(e2);
-        poo.print();
+        poo.maiorCr().print();
     }
 }
