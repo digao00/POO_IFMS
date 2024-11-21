@@ -17,11 +17,13 @@ public class Disciplina {
         listaEstudantes.remove(i);
     }
     public void rmEstudanteRA(int ra) {
+        int a = -1;
         for(int i = 0; i < listaEstudantes.size(); i++) {
             if (ra == listaEstudantes.get(i).getRa()) {
-                listaEstudantes.remove(i);
+                a = i;
             }
         }
+        listaEstudantes.remove(a);
     }
     public float mediaCR() {
         float crTotal = 0;
