@@ -25,7 +25,6 @@ public class Circulo extends FiguraGeometrica {
     }
     @Override
     public void print() {
-        System.out.println("Círculo:");
         super.print();
         System.out.printf("\nRaio: %.2f", raio);
     }
