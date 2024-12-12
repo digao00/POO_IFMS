@@ -18,6 +18,7 @@ public class Main {
         else {
             System.out.println("x1 = " + function.baskaraX1() + "\nx2 = " + function.baskaraX2());
         }
+        System.out.println("a");
     }
 
 }
