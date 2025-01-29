@@ -12,6 +12,7 @@ public class Disciplina {
         this.nome = nome;
         this.prof = prof;
         this.numEstudantes = numEstudantes;
+        this.listaEstudantes = new ArrayList<>();
     }
 
     public ArrayList<Estudante> getListaEstudantes() {
@@ -47,6 +48,7 @@ public class Disciplina {
     }
 
     public void print() {
+        System.out.print("\n----------------");
         System.out.printf("\nDisciplina: %s\nProf: %s\nNumero de Estudantes: %d", nome, prof, numEstudantes);
         for (Estudante estudante : listaEstudantes) {
             estudante.print();

@@ -10,14 +10,14 @@ public class Main {
     public static void main(String[] args) {
         ArrayList<Disciplina> listaDisciplinas = new ArrayList<>();
         readDisciplina(listaDisciplinas, "C:\\Users\\joaor\\OneDrive\\Desktop\\jao_tarefa\\Escola\\teste.txt");
-        for (Disciplina disciplina : listaDisciplinas) {
-            disciplina.print();
-        }
         Disciplina d1 = new Disciplina("Matemática", "Elton", 2);
         d1.addEstudante(new Estudante("84392", "João Rodrigo", (short)17));
         d1.addEstudante(new Estudante("35756", "Thiago", (short)16));
         listaDisciplinas.add(d1);
         writeDisciplinas(listaDisciplinas, "C:\\Users\\joaor\\OneDrive\\Desktop\\jao_tarefa\\Escola\\teste.txt");
+        for (Disciplina disciplina : listaDisciplinas) {
+            disciplina.print();
+        }
     }
 
     //apaga o conteúdo e escreve os estudantes da lista atual no arquivo txt
