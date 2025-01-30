@@ -43,8 +43,13 @@ public class Disciplina {
         this.numEstudantes = numEstudantes;
     }
 
+
     public void addEstudante(Estudante estudante) {
         listaEstudantes.add(estudante);
+    }
+
+    public void rmEstudante(int i) {
+        listaEstudantes.remove(i);
     }
 
     public void print() {
