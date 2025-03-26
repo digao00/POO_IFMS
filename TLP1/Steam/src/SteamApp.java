@@ -11,9 +11,9 @@ public class SteamApp {
 	private static String user;
 	public static void main(String[] args) {
 		// Configurações de conexão com o banco de dados
-        String url = "jdbc:postgresql://localhost:5432/Steam";
+        String url = "jdbc:postgresql://localhost:5432/SteamBanco";
         String usuario = "postgres";
-        String senha = "postgresql";
+        String senha = "postgres"; //F101 = "postgresql" F103 = "postgres"
 		
 		 // Objeto Scanner para entrada de dados do usuário
         Scanner scanner = new Scanner(System.in);
@@ -30,7 +30,10 @@ public class SteamApp {
 
 				switch (opcao) {
 					case 1:
-						criarConta(conexao, scanner);
+						if (criarConta(conexao, scanner)) {
+							System.out.println("Conta criada com sucesso!\n");
+							io = 0;
+						}
 						break;
 					case 2:
 						System.out.printf("\nNome: ");
@@ -42,7 +45,7 @@ public class SteamApp {
 							io = 0;
 						}
 						else {
-							System.out.println("Nome ou senha errados.");
+							System.out.println("Nome ou senha errados.\n");
 						}
 						break;
 					default:
@@ -58,7 +61,7 @@ public class SteamApp {
 	            System.out.println("4 - Excluir conta");
 	            System.out.println("5 - Sair");
 	            int opcao = scanner.nextInt();
-	            scanner.nextLine(); // Consumir a nova linha
+	            scanner.nextLine(); 
 	
 	            switch (opcao) {
 	                case 1:
@@ -85,17 +88,26 @@ public class SteamApp {
         }
 	}
 	
-    private static void comprarJogo(Connection conexao, Scanner scanner) throws SQLException {
-        System.out.println("Digite o nome do titular da conta:");
-        String nome = scanner.nextLine();
-
-        String sql = "INSERT INTO conta (nome, saldo) VALUES (?, ?)";
-        try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-            stmt.setString(1, nome);
-            stmt.setDouble(2, 0.0); // Saldo inicial zero
-            stmt.executeUpdate();
-            System.out.println("Conta criada com sucesso!");
-        }
+    private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException {
+		System.out.println("\nDigite um nome de usuário:");
+		String nome = scanner.nextLine();
+		System.out.println("\nDigite uma senha:");
+		String senha = scanner.nextLine();
+        String sql = "INSERT INTO jogador (nome, senha) VALUES (?, ?)";
+		String sql2 = "SELECT * FROM jogador WHERE nome = '" + nome + "'";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql2); ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) {
+					System.out.println("Nome de usuário indisponível");
+					return false;
+				}
+			try (PreparedStatement stmt2 = conexao.prepareStatement(sql)) {
+					stmt2.setString(1, nome);
+        			stmt2.setString(2, senha);
+        			stmt2.executeUpdate();
+					user = nome;
+					return true;
+			}
+		}
     }
 
     private static void mostrarLoja(Connection conexao) throws SQLException {
@@ -115,7 +127,7 @@ public class SteamApp {
 
 	}
     
-	private static void criarConta(Connection conexao, Scanner scanner) throws SQLException {
+	private static void comprarJogo(Connection conexao, Scanner scanner) throws SQLException {
 
 	}
 
