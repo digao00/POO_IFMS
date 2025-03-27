@@ -5,17 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.io.IOException;
 
 public class SteamApp {
 	
-	private static String user;
-	public static void main(String[] args) {
+	private static String userID;
+	public static void main(String[] args) throws IOException, InterruptedException {
 		// Configurações de conexão com o banco de dados
-        String url = "jdbc:postgresql://localhost:5432/SteamBanco";
+        String url = "jdbc:postgresql://localhost:5432/Steam";
         String usuario = "postgres";
         String senha = "postgres"; //F101 = "postgresql" F103 = "postgres"
-		
-		 // Objeto Scanner para entrada de dados do usuário
         Scanner scanner = new Scanner(System.in);
         
         try (Connection conexao = DriverManager.getConnection(url, usuario, senha)) {
@@ -27,28 +26,21 @@ public class SteamApp {
 				System.out.println("2 - Login");
 				int opcao = scanner.nextInt();
 				scanner.nextLine();
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 
 				switch (opcao) {
 					case 1:
-						if (criarConta(conexao, scanner)) {
-							System.out.println("Conta criada com sucesso!\n");
-							io = 0;
-						}
+						if (criarConta(conexao, scanner)) {io = 0;}
 						break;
 					case 2:
 						System.out.printf("\nNome: ");
 						String nomeLogin = scanner.nextLine();
 						System.out.printf("\nSenha: ");
 						String senhaLogin = scanner.nextLine();
-			
-						if (login(conexao, nomeLogin, senhaLogin)) {
-							io = 0;
-						}
-						else {
-							System.out.println("Nome ou senha errados.\n");
-						}
+						if (login(conexao, nomeLogin, senhaLogin)) {io = 0;}
 						break;
 					default:
+						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 						break;
 				}
 			}
@@ -66,6 +58,7 @@ public class SteamApp {
 	            switch (opcao) {
 	                case 1:
 	                	mostrarLoja(conexao);
+						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	                    break;
 					case 2:
 						comprarJogo(conexao, scanner);
@@ -83,44 +76,64 @@ public class SteamApp {
 	                    System.out.println("Opção inválida!");
 	            }
 	        }
-        } catch (SQLException e) {
+        } 
+		catch (SQLException e) {
             System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
         }
 	}
+
+
+
+
 	
-    private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException {
+    private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
 		System.out.println("\nDigite um nome de usuário:");
 		String nome = scanner.nextLine();
 		System.out.println("\nDigite uma senha:");
 		String senha = scanner.nextLine();
         String sql = "INSERT INTO jogador (nome, senha) VALUES (?, ?)";
 		String sql2 = "SELECT * FROM jogador WHERE nome = '" + nome + "'";
-        try (PreparedStatement stmt = conexao.prepareStatement(sql2); ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt2 = conexao.prepareStatement(sql2); ResultSet rs = stmt2.executeQuery()) {
 			while (rs.next()) {
-					System.out.println("Nome de usuário indisponível");
-					return false;
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				System.out.println("Nome de usuário indisponível");
+				System.out.println("Pressione Enter para continuar...");
+				scanner.nextLine();
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				return false;
+			}
+			try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+				stmt.setString(1, nome);
+        		stmt.setString(2, senha);
+        		stmt.executeUpdate();	 
+				try (ResultSet rs2 = stmt2.executeQuery()) {
+					while (rs2.next()) {
+						userID = rs2.getString("id");
+					}
 				}
-			try (PreparedStatement stmt2 = conexao.prepareStatement(sql)) {
-					stmt2.setString(1, nome);
-        			stmt2.setString(2, senha);
-        			stmt2.executeUpdate();
-					user = nome;
-					return true;
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				System.out.println("Conta criada com sucesso!\n");
+				System.out.println("Pressione Enter para continuar...");
+				scanner.nextLine();
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				return true;
 			}
 		}
     }
 
     private static void mostrarLoja(Connection conexao) throws SQLException {
-        String sql = "SELECT * FROM conta";
-        try (
-        	PreparedStatement stmt = conexao.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery()) {
+        String sql = "SELECT * FROM jogos";
+        try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                System.out.println("ID: " + rs.getInt("id") + 
-                                 ", Nome: " + rs.getString("nome") + 
-                                 ", Saldo: " + rs.getDouble("saldo"));
+				int i = 1;
+                System.out.println(i + " - " + rs.getString("nome"));
+				i++;
             }
         }
+		System.out.println("Pressione Enter para sair...");
+		@SuppressWarnings("resource")
+		Scanner pause = new Scanner(System.in);
+		pause.nextLine();
     }
 	
 	private static void mostrarBiblioteca(Connection conexao) throws SQLException {
@@ -131,17 +144,29 @@ public class SteamApp {
 
 	}
 
-	private static boolean login(Connection conexao, String nome, String senha) throws SQLException {
+	private static boolean login(Connection conexao, String nome, String senha) throws SQLException, IOException, InterruptedException {
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
 		String sql = "SELECT * FROM jogador WHERE nome = '" + nome + "' AND senha = '" + senha + "'";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 			while (rs.next()) {
-				user = rs.getString("nome");
+				userID = rs.getString("id");
 			}
 		}
-		if (user == null) {
+		if (userID == null) {
+			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			System.out.println("Nome ou senha errados.\n");
+			System.out.println("Pressione Enter para continuar...");
+			scanner.nextLine();
+			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 			return false;
 		}
 		else {
+			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			System.out.println("Conta Logada");
+			System.out.println("Pressione Enter para continuar...");
+			scanner.nextLine();
+			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 			return true;
 		}
 	}
