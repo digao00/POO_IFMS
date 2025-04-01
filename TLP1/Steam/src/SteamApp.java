@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.IOException;
 
@@ -11,7 +12,9 @@ public class SteamApp {
 	
 	private static String userID;
 	public static void main(String[] args) throws IOException, InterruptedException {
-		// Configurações de conexão com o banco de dados
+
+		// "new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();" -> para limpar o terminal
+
         String url = "jdbc:postgresql://localhost:5432/Steam";
         String usuario = "postgres";
         String senha = "postgres"; //F101 = "postgresql" F103 = "postgres"
@@ -37,7 +40,7 @@ public class SteamApp {
 						String nomeLogin = scanner.nextLine();
 						System.out.printf("\nSenha: ");
 						String senhaLogin = scanner.nextLine();
-						if (login(conexao, nomeLogin, senhaLogin)) {io = 0;}
+						if (login(conexao, nomeLogin, senhaLogin, scanner)) {io = 0;}
 						break;
 					default:
 						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
@@ -57,10 +60,12 @@ public class SteamApp {
 	
 	            switch (opcao) {
 	                case 1:
-	                	mostrarLoja(conexao);
+						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+	                	mostrarLoja(conexao, scanner);
 						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	                    break;
 					case 2:
+						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 						comprarJogo(conexao, scanner);
 	                    break;
 					case 3:
@@ -87,9 +92,9 @@ public class SteamApp {
 
 	
     private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
-		System.out.println("\nDigite um nome de usuário:");
+		System.out.printf("\nDigite um nome de usuário: ");
 		String nome = scanner.nextLine();
-		System.out.println("\nDigite uma senha:");
+		System.out.printf("\nDigite uma senha: ");
 		String senha = scanner.nextLine();
         String sql = "INSERT INTO jogador (nome, senha) VALUES (?, ?)";
 		String sql2 = "SELECT * FROM jogador WHERE nome = '" + nome + "'";
@@ -121,32 +126,58 @@ public class SteamApp {
 		}
     }
 
-    private static void mostrarLoja(Connection conexao) throws SQLException {
+
+
+
+    private static void mostrarLoja(Connection conexao, Scanner scanner) throws SQLException {
         String sql = "SELECT * FROM jogos";
         try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-				int i = 1;
-                System.out.println(i + " - " + rs.getString("nome"));
-				i++;
+                System.out.printf("%s - %s\n", rs.getString("id"),rs.getString("nome"));
             }
         }
 		System.out.println("Pressione Enter para sair...");
-		@SuppressWarnings("resource")
-		Scanner pause = new Scanner(System.in);
-		pause.nextLine();
+		scanner.nextLine();
     }
 	
-	private static void mostrarBiblioteca(Connection conexao) throws SQLException {
 
+
+
+	private static void mostrarBiblioteca(Connection conexao) throws SQLException {
+		//from jogador_jogo where id_jogador = userID
 	}
     
-	private static void comprarJogo(Connection conexao, Scanner scanner) throws SQLException {
 
+
+
+	private static void comprarJogo(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
+		while (true) {
+			System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
+			try {
+				int jogo = scanner.nextInt();
+				String sql = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (" + jogo + ","+ userID +")";
+				try (PreparedStatement stmt = conexao.prepareStatement(sql);) {
+					stmt.executeUpdate();
+					System.out.println("Jogo adcionado a sua biblioteca.");
+					System.out.println("Pressione Enter para continuar...");
+					scanner.nextLine();
+				}
+				return;
+			}
+			catch (InputMismatchException e) {
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				System.out.println("Digite um id válido.");
+				System.out.println("Pressione Enter para continuar...");
+				scanner.nextLine();
+			}		
+		}
 	}
 
-	private static boolean login(Connection conexao, String nome, String senha) throws SQLException, IOException, InterruptedException {
+
+
+
+	private static boolean login(Connection conexao, String nome, String senha, Scanner scanner) throws SQLException, IOException, InterruptedException {
 		@SuppressWarnings("resource")
-		Scanner scanner = new Scanner(System.in);
 		String sql = "SELECT * FROM jogador WHERE nome = '" + nome + "' AND senha = '" + senha + "'";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 			while (rs.next()) {
