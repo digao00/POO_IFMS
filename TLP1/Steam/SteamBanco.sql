@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.1
 
--- Started on 2025-03-27 16:31:46
+-- Started on 2025-04-03 16:28:06
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -34,7 +34,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 217 (class 1259 OID 35613)
+-- TOC entry 217 (class 1259 OID 27389)
 -- Name: jogador; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -48,7 +48,7 @@ CREATE TABLE public.jogador (
 ALTER TABLE public.jogador OWNER TO postgres;
 
 --
--- TOC entry 218 (class 1259 OID 35616)
+-- TOC entry 218 (class 1259 OID 27392)
 -- Name: jogador_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -73,21 +73,21 @@ ALTER SEQUENCE public.jogador_id_seq OWNED BY public.jogador.id;
 
 
 --
--- TOC entry 219 (class 1259 OID 35617)
+-- TOC entry 222 (class 1259 OID 27428)
 -- Name: jogador_jogos; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.jogador_jogos (
     id integer NOT NULL,
-    id_jogador integer NOT NULL,
-    id_jogo integer NOT NULL
+    id_jogo integer NOT NULL,
+    id_jogador integer NOT NULL
 );
 
 
 ALTER TABLE public.jogador_jogos OWNER TO postgres;
 
 --
--- TOC entry 220 (class 1259 OID 35620)
+-- TOC entry 221 (class 1259 OID 27427)
 -- Name: jogador_jogos_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -104,7 +104,7 @@ ALTER SEQUENCE public.jogador_jogos_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 4921 (class 0 OID 0)
--- Dependencies: 220
+-- Dependencies: 221
 -- Name: jogador_jogos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -112,7 +112,7 @@ ALTER SEQUENCE public.jogador_jogos_id_seq OWNED BY public.jogador_jogos.id;
 
 
 --
--- TOC entry 221 (class 1259 OID 35621)
+-- TOC entry 219 (class 1259 OID 27397)
 -- Name: jogos; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -125,7 +125,7 @@ CREATE TABLE public.jogos (
 ALTER TABLE public.jogos OWNER TO postgres;
 
 --
--- TOC entry 222 (class 1259 OID 35624)
+-- TOC entry 220 (class 1259 OID 27400)
 -- Name: jogos_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -142,7 +142,7 @@ ALTER SEQUENCE public.jogos_id_seq OWNER TO postgres;
 
 --
 -- TOC entry 4922 (class 0 OID 0)
--- Dependencies: 222
+-- Dependencies: 220
 -- Name: jogos_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
@@ -150,7 +150,7 @@ ALTER SEQUENCE public.jogos_id_seq OWNED BY public.jogos.id;
 
 
 --
--- TOC entry 4752 (class 2604 OID 35625)
+-- TOC entry 4752 (class 2604 OID 27401)
 -- Name: jogador id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -158,7 +158,7 @@ ALTER TABLE ONLY public.jogador ALTER COLUMN id SET DEFAULT nextval('public.joga
 
 
 --
--- TOC entry 4753 (class 2604 OID 35626)
+-- TOC entry 4754 (class 2604 OID 27431)
 -- Name: jogador_jogos id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -166,7 +166,7 @@ ALTER TABLE ONLY public.jogador_jogos ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
--- TOC entry 4754 (class 2604 OID 35627)
+-- TOC entry 4753 (class 2604 OID 27403)
 -- Name: jogos id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -174,7 +174,7 @@ ALTER TABLE ONLY public.jogos ALTER COLUMN id SET DEFAULT nextval('public.jogos_
 
 
 --
--- TOC entry 4908 (class 0 OID 35613)
+-- TOC entry 4908 (class 0 OID 27389)
 -- Dependencies: 217
 -- Data for Name: jogador; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -183,19 +183,24 @@ INSERT INTO public.jogador VALUES (5, 'digao', '1234');
 INSERT INTO public.jogador VALUES (6, 'joao', '123');
 INSERT INTO public.jogador VALUES (8, 'jao', '0609');
 INSERT INTO public.jogador VALUES (9, 'hatsu', '6969');
+INSERT INTO public.jogador VALUES (10, 'jaozin', '555');
+INSERT INTO public.jogador VALUES (11, 'jaojao', 'jao');
 
 
 --
--- TOC entry 4910 (class 0 OID 35617)
--- Dependencies: 219
+-- TOC entry 4913 (class 0 OID 27428)
+-- Dependencies: 222
 -- Data for Name: jogador_jogos; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+INSERT INTO public.jogador_jogos VALUES (1, 6, 5);
+INSERT INTO public.jogador_jogos VALUES (2, 5, 5);
+INSERT INTO public.jogador_jogos VALUES (3, 7, 11);
 
 
 --
--- TOC entry 4912 (class 0 OID 35621)
--- Dependencies: 221
+-- TOC entry 4910 (class 0 OID 27397)
+-- Dependencies: 219
 -- Data for Name: jogos; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -211,21 +216,21 @@ INSERT INTO public.jogos VALUES (8, 'Unturned');
 -- Name: jogador_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.jogador_id_seq', 9, true);
+SELECT pg_catalog.setval('public.jogador_id_seq', 11, true);
 
 
 --
 -- TOC entry 4924 (class 0 OID 0)
--- Dependencies: 220
+-- Dependencies: 221
 -- Name: jogador_jogos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.jogador_jogos_id_seq', 1, false);
+SELECT pg_catalog.setval('public.jogador_jogos_id_seq', 3, true);
 
 
 --
 -- TOC entry 4925 (class 0 OID 0)
--- Dependencies: 222
+-- Dependencies: 220
 -- Name: jogos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
@@ -233,7 +238,7 @@ SELECT pg_catalog.setval('public.jogos_id_seq', 8, true);
 
 
 --
--- TOC entry 4758 (class 2606 OID 35629)
+-- TOC entry 4760 (class 2606 OID 27433)
 -- Name: jogador_jogos jogador_jogos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -242,7 +247,7 @@ ALTER TABLE ONLY public.jogador_jogos
 
 
 --
--- TOC entry 4756 (class 2606 OID 35631)
+-- TOC entry 4756 (class 2606 OID 27407)
 -- Name: jogador jogador_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -251,7 +256,7 @@ ALTER TABLE ONLY public.jogador
 
 
 --
--- TOC entry 4760 (class 2606 OID 35633)
+-- TOC entry 4758 (class 2606 OID 27409)
 -- Name: jogos jogos_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -260,7 +265,7 @@ ALTER TABLE ONLY public.jogos
 
 
 --
--- TOC entry 4761 (class 2606 OID 35634)
+-- TOC entry 4761 (class 2606 OID 27439)
 -- Name: jogador_jogos id_jogador; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -269,7 +274,7 @@ ALTER TABLE ONLY public.jogador_jogos
 
 
 --
--- TOC entry 4762 (class 2606 OID 35639)
+-- TOC entry 4762 (class 2606 OID 27434)
 -- Name: jogador_jogos id_jogo; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -287,7 +292,7 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2025-03-27 16:31:47
+-- Completed on 2025-04-03 16:28:06
 
 --
 -- PostgreSQL database dump complete

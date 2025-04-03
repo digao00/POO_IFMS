@@ -49,6 +49,7 @@ public class SteamApp {
 			}
 
 	        while (true) {
+				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	            System.out.println("\nEscolha uma opção:");
 	            System.out.println("1 - Loja");
 	            System.out.println("2 - Comprar jogo");
@@ -65,9 +66,15 @@ public class SteamApp {
 						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	                    break;
 					case 2:
-						comprarJogo(conexao, scanner);
-	                    break;
+						int a = 1;
+						while (a == 1) {
+							if(comprarJogo(conexao, scanner)) {
+								a = 0;
+							}
+						}
+						break;
 					case 3:
+						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 						mostrarBiblioteca(conexao);
 	                    break;
 	                case 4:
@@ -128,7 +135,7 @@ public class SteamApp {
 
 
 
-    private static void mostrarLoja(Connection conexao, Scanner scanner) throws SQLException {
+	private static void mostrarLoja(Connection conexao, Scanner scanner) throws SQLException {
         String sql = "SELECT * FROM jogos";
         try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
@@ -142,46 +149,63 @@ public class SteamApp {
 
 
 
+	@SuppressWarnings("resource")
 	private static void mostrarBiblioteca(Connection conexao) throws SQLException {
-		//from jogador_jogo where id_jogador = userID
+		String sql = "SELECT * FROM public.jogos, public.jogador_jogos WHERE jogador_jogos.id_jogador = " + userID + " AND jogos.id = jogador_jogos.id_jogo";
+		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+			System.out.println("Sua biblioteca: ");
+			while (rs.next()) {
+				System.out.println(rs.getString("nome"));
+			}
+			System.out.println("\nPressione Enter para continuar...");
+			new Scanner(System.in).nextLine();
+		}
 	}
     
 
 
 
+	@SuppressWarnings("resource")
 	private static boolean comprarJogo(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
-		/*while (true) {
-			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-			System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
-			try {
-				int jogo = scanner.nextInt();
-				String sql2 = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (?, ?)";
-				String sql = "SELECT * FROM jogos WHERE id = " + jogo;
-				try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery();) {
-					while (rs.next()) {
-						try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
-							new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-							stmt2.setInt(1, jogo);
-							stmt2.setInt(2, userID);
-							stmt.executeUpdate();
-							System.out.println("Jogo adcionado a sua biblioteca.");
-							System.out.println("Pressione Enter para continuar...");
-							scanner.nextLine();
-						}
+		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+		System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
+		try {
+			int jogo = scanner.nextInt();
+			if (jogo == 0) {
+				return true;
+			}
+			String sql2 = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (?, ?)";
+			String sql = "SELECT * FROM jogos WHERE id = " + jogo;
+			try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery();) {
+				while (rs.next()) {
+					try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
+						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+						stmt2.setInt(1, jogo);
+						stmt2.setInt(2, userID);
+						stmt2.executeUpdate();
+						System.out.println("Jogo adcionado a sua biblioteca.");
+						System.out.println("Pressione Enter para continuar...");
+						new Scanner(System.in).nextLine();
+						return true;
 					}
 				}
-			}
-			catch (InputMismatchException e) {
 				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 				System.out.println("Digite um id válido.");
 				System.out.println("Pressione Enter para continuar...");
-				scanner.nextLine();
+				new Scanner(System.in).nextLine();
+				return false;
 			}
-		}*/
-		return false;
+		}
+		catch (InputMismatchException e) {
+			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			System.out.println("Digite um id válido.");
+			System.out.println("Pressione Enter para continuar...");
+			new Scanner(System.in).nextLine();
+			return false;
+		}
 	}
 
-
+	//private static void deletarConta(Connection conexao) {}
 
 
 	private static boolean login(Connection conexao, String nome, String senha, Scanner scanner) throws SQLException, IOException, InterruptedException {
