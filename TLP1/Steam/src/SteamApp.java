@@ -17,7 +17,7 @@ public class SteamApp {
 
         String url = "jdbc:postgresql://localhost:5432/Steam";
         String usuario = "postgres";
-        String senha = "postgres"; //F101 = "postgresql" F103 = "postgres"
+        String senha = "postgresql"; //F101 = "postgresql" F103 = "postgres"
         Scanner scanner = new Scanner(System.in);
         
         try (Connection conexao = DriverManager.getConnection(url, usuario, senha)) {
@@ -171,13 +171,14 @@ public class SteamApp {
 		System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
 		try {
 			int jogo = scanner.nextInt();
+			scanner.nextLine();
 			if (jogo == 0) {
 				return true;
 			}
 			String sql2 = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (?, ?)";
 			String sql = "SELECT * FROM jogos WHERE id = " + jogo;
 			try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery();) {
-				while (rs.next()) {
+				if (rs.next()) {
 					try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
 						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 						stmt2.setInt(1, jogo);
@@ -185,22 +186,25 @@ public class SteamApp {
 						stmt2.executeUpdate();
 						System.out.println("Jogo adcionado a sua biblioteca.");
 						System.out.println("Pressione Enter para continuar...");
-						new Scanner(System.in).nextLine();
+						scanner.nextLine();
 						return true;
 					}
 				}
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-				System.out.println("Digite um id válido.");
-				System.out.println("Pressione Enter para continuar...");
-				new Scanner(System.in).nextLine();
-				return false;
+				else {
+					new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+					System.out.println("Digite um id válido.");
+					System.out.println("Pressione Enter para continuar...");
+					new Scanner(System.in).nextLine();
+					return false;
+				}
 			}
 		}
 		catch (InputMismatchException e) {
+			scanner.nextLine();
 			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 			System.out.println("Digite um id válido.");
 			System.out.println("Pressione Enter para continuar...");
-			new Scanner(System.in).nextLine();
+			scanner.nextLine();
 			return false;
 		}
 	}
