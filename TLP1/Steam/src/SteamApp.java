@@ -165,7 +165,6 @@ public class SteamApp {
 
 
 
-	@SuppressWarnings("resource")
 	private static boolean comprarJogo(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
 		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 		System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
