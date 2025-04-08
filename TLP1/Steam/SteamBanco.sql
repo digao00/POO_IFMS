@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.1
 
--- Started on 2025-04-03 16:28:06
+-- Started on 2025-04-08 16:29:46
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -184,7 +184,6 @@ INSERT INTO public.jogador VALUES (6, 'joao', '123');
 INSERT INTO public.jogador VALUES (8, 'jao', '0609');
 INSERT INTO public.jogador VALUES (9, 'hatsu', '6969');
 INSERT INTO public.jogador VALUES (10, 'jaozin', '555');
-INSERT INTO public.jogador VALUES (11, 'jaojao', 'jao');
 
 
 --
@@ -195,7 +194,8 @@ INSERT INTO public.jogador VALUES (11, 'jaojao', 'jao');
 
 INSERT INTO public.jogador_jogos VALUES (1, 6, 5);
 INSERT INTO public.jogador_jogos VALUES (2, 5, 5);
-INSERT INTO public.jogador_jogos VALUES (3, 7, 11);
+INSERT INTO public.jogador_jogos VALUES (4, 8, 5);
+INSERT INTO public.jogador_jogos VALUES (6, 7, 5);
 
 
 --
@@ -225,7 +225,7 @@ SELECT pg_catalog.setval('public.jogador_id_seq', 11, true);
 -- Name: jogador_jogos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.jogador_jogos_id_seq', 3, true);
+SELECT pg_catalog.setval('public.jogador_jogos_id_seq', 6, true);
 
 
 --
@@ -292,7 +292,7 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2025-04-03 16:28:06
+-- Completed on 2025-04-08 16:29:46
 
 --
 -- PostgreSQL database dump complete
