@@ -190,7 +190,6 @@ public class SteamApp {
     
 
 
-
 	private static void comprarJogo(Connection conexao, Scanner scanner, int jogo) throws SQLException, IOException, InterruptedException, InvalidIdExeption, AlreadyPurchasedGameExeption {
 		String sql3 = "SELECT * FROM jogador_jogos WHERE id_jogador = "+ userID + " AND id_jogo = "+ jogo;
 		String sql2 = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (?, ?)";
@@ -220,15 +219,19 @@ public class SteamApp {
 		String sql = "DELETE FROM jogador_jogos WHERE id_jogador = "+ userID + "; DELETE FROM jogador WHERE id = " + userID;
 		System.out.println("Você tem certeza que quer deletar sua conta? (y/n)");
 		String resposta = scanner.nextLine();
-		switch (resposta) {
-			case "y":
-				try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-					stmt.executeUpdate();
-				}
-				break;
-		
-			default:
-				break;
+		while (true) {
+			switch (resposta) {
+				case "y","Y":
+					try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+						stmt.executeUpdate();
+					}
+					return;
+				case "n","N":
+					return;
+				default:
+					break;
+			}
+			return;
 		}
 	}
 
