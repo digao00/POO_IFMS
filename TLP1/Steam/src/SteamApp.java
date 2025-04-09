@@ -13,7 +13,7 @@ public class SteamApp {
 	private static int userID;
 	public static void main(String[] args) throws IOException, InterruptedException {
 
-		// "new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();" -> para limpar o terminal
+		// "limparTela();" -> para limpar o terminal
 
         String url = "jdbc:postgresql://localhost:5432/Steam";
         String usuario = "postgres";
@@ -24,94 +24,113 @@ public class SteamApp {
             System.out.println("Conexão com o banco de dados estabelecida!");
 			int io = 1;
 			while (io == 1) {
-				System.out.println("\n###### Steam ######");
-				System.out.println("1 - Criar conta");
-				System.out.println("2 - Login");
-				int opcao = scanner.nextInt();
-				scanner.nextLine();
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-
-				switch (opcao) {
-					case 1:
-						if (criarConta(conexao, scanner)) {io = 0;}
-						break;
-					case 2:
-						System.out.printf("\nNome: ");
-						String nomeLogin = scanner.nextLine();
-						System.out.printf("\nSenha: ");
-						String senhaLogin = scanner.nextLine();
-						if (login(conexao, nomeLogin, senhaLogin, scanner)) {io = 0;}
-						break;
-					default:
-						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-						break;
+				try {
+					limparTela();
+					System.out.println("\n###### Steam ######");
+					System.out.println("1 - Criar conta");
+					System.out.println("2 - Login");
+					int opcao = scanner.nextInt();
+					scanner.nextLine();
+					limparTela();
+					
+					switch (opcao) {
+						case 1:
+							if (criarConta(conexao, scanner)) {io = 0;}
+							break;
+						case 2:
+							System.out.printf("\nNome: ");
+							String nomeLogin = scanner.nextLine();
+							System.out.printf("\nSenha: ");
+							String senhaLogin = scanner.nextLine();
+							if (login(conexao, nomeLogin, senhaLogin, scanner)) {io = 0;}
+							break;
+						default:
+							opçãoInvalida(scanner);
+							break;
+					}
+				}
+				catch (InputMismatchException e) {
+					scanner.nextLine();
+					opçãoInvalida(scanner);
 				}
 			}
 
 	        while (true) {
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-	            System.out.println("\nEscolha uma opção:");
-	            System.out.println("1 - Loja");
-	            System.out.println("2 - Comprar jogo");
-	            System.out.println("3 - Sua biblioteca");
-	            System.out.println("4 - Excluir conta");
-	            System.out.println("5 - Sair");
-	            int opcao = scanner.nextInt();
-	            scanner.nextLine(); 
-	
-	            switch (opcao) {
-	                case 1:
-						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-	                	mostrarLoja(conexao, scanner);
-						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-	                    break;
-					case 2:
-						while (true) {
-							try {
-									new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-									System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
-									int jogo = scanner.nextInt();
-									scanner.nextLine();
-									if (jogo == 0) {
+				try {
+					limparTela();
+	            	System.out.println("\nEscolha uma opção:");
+	            	System.out.println("1 - Loja");
+	            	System.out.println("2 - Comprar jogo");
+	            	System.out.println("3 - Sua biblioteca");
+	            	System.out.println("4 - Excluir conta");
+	            	System.out.println("5 - Sair");
+	            	int opcao = scanner.nextInt();
+	            	scanner.nextLine(); 
+					
+	            	switch (opcao) {
+	            	    case 1:
+							limparTela();
+	            	    	mostrarLoja(conexao, scanner);
+							limparTela();
+	            	        break;
+						case 2:
+							while (true) {
+								try {
+										limparTela();
+										System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
+										int jogo = scanner.nextInt();
+										scanner.nextLine();
+										if (jogo == 0) {
+											break;
+										}
+										comprarJogo(conexao, scanner, jogo);
 										break;
 									}
-									comprarJogo(conexao, scanner, jogo);
-									break;
+									catch (InvalidIdExeption e) {
+										limparTela();
+										System.out.println("Digite um id válido.");
+										System.out.println("Pressione Enter para continuar...");
+										scanner.nextLine();
+									}
+									catch (InputMismatchException e) {
+										scanner.nextLine();
+										limparTela();
+										System.out.println("Digite um id válido.");
+										System.out.println("Pressione Enter para continuar...");
+										scanner.nextLine();
+									}
+									catch (AlreadyPurchasedGameExeption e) {
+										limparTela();
+										System.out.println(e.getMessage());
+										System.out.println("Pressione Enter para continuar...");
+										scanner.nextLine();
+									}
 								}
-								catch (InvalidIdExeption e) {
-									new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-									System.out.println("Digite um id válido.");
-									System.out.println("Pressione Enter para continuar...");
-									scanner.nextLine();
-								}
-								catch (InputMismatchException e) {
-									scanner.nextLine();
-									new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-									System.out.println("Digite um id válido.");
-									System.out.println("Pressione Enter para continuar...");
-									scanner.nextLine();
-								}
-								catch (AlreadyPurchasedGameExeption e) {
-									new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-									System.out.println(e.getMessage());
-									System.out.println("Pressione Enter para continuar...");
-									scanner.nextLine();
-								}
+								break;
+						case 3:
+							limparTela();
+							mostrarBiblioteca(conexao);
+	            	        break;
+	            	    case 4:
+							if (deletarConta(conexao, scanner)) {
+								limparTela();
+								System.out.println("Saindo...");
+								return;
 							}
+							limparTela();
+	            	        break;
+	            	    case 5:
+	            	        System.out.println("Saindo...");
+	            	        return;
+	            	    default:
+							opçãoInvalida(scanner);
 							break;
-					case 3:
-						new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-						mostrarBiblioteca(conexao);
-	                    break;
-	                case 4:
-	                	System.out.println("Alma libertada");
-	                    return;
-	                case 5:
-	                    System.out.println("Saindo...");
-	                    return;
-	                default:
-	                    System.out.println("Opção inválida!");
-	            }
+	            	}
+				}
+				catch (InputMismatchException e) {
+					scanner.nextLine();
+					opçãoInvalida(scanner);
+				}
 	        }
         } 
 		catch (SQLException e) {
@@ -125,18 +144,26 @@ public class SteamApp {
 	
     private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
 		System.out.printf("\nDigite um nome de usuário: ");
-		String nome = scanner.nextLine();
+		String nome = scanner.nextLine().trim();
 		System.out.printf("\nDigite uma senha: ");
-		String senha = scanner.nextLine();
+		String senha = scanner.nextLine().trim();
+		if (nome.isEmpty() || senha.isEmpty() || nome.contains(" ") || senha.contains(" ") || senha.length() < 8) {
+			limparTela();
+			System.out.println("Nome de usuário indisponível");
+			System.out.println("Pressione Enter para continuar...");
+			scanner.nextLine();
+			limparTela();
+			return false;
+		}
         String sql = "INSERT INTO jogador (nome, senha) VALUES (?, ?)";
 		String sql2 = "SELECT * FROM jogador WHERE nome = '" + nome + "'";
         try (PreparedStatement stmt2 = conexao.prepareStatement(sql2); ResultSet rs = stmt2.executeQuery()) {
 			while (rs.next()) {
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				limparTela();
 				System.out.println("Nome de usuário indisponível");
 				System.out.println("Pressione Enter para continuar...");
 				scanner.nextLine();
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				limparTela();
 				return false;
 			}
 			try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -148,11 +175,11 @@ public class SteamApp {
 						userID = rs2.getInt("id");
 					}
 				}
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				limparTela();
 				System.out.println("Conta criada com sucesso!\n");
 				System.out.println("Pressione Enter para continuar...");
 				scanner.nextLine();
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				limparTela();
 				return true;
 			}
 		}
@@ -204,7 +231,7 @@ public class SteamApp {
 				throw new InvalidIdExeption("Erro: ID inválido");
 			}
 			try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
-				new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+				limparTela();
 				stmt2.setInt(1, jogo);
 				stmt2.setInt(2, userID);
 				stmt2.executeUpdate();
@@ -215,23 +242,25 @@ public class SteamApp {
 		}
 	}
 
-	private static void deletarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
+	private static boolean deletarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
 		String sql = "DELETE FROM jogador_jogos WHERE id_jogador = "+ userID + "; DELETE FROM jogador WHERE id = " + userID;
-		System.out.println("Você tem certeza que quer deletar sua conta? (y/n)");
-		String resposta = scanner.nextLine();
+		limparTela();
 		while (true) {
+			System.out.println("Você tem certeza que quer deletar sua conta? (y/n)");
+			String resposta = scanner.nextLine();
 			switch (resposta) {
 				case "y","Y":
 					try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 						stmt.executeUpdate();
+						System.out.println("Alma libertada");
 					}
-					return;
+					return true;
 				case "n","N":
-					return;
+					return false;
 				default:
+					opçãoInvalida(scanner);
 					break;
 			}
-			return;
 		}
 	}
 
@@ -244,20 +273,31 @@ public class SteamApp {
 			}
 		}
 		if (userID == 0) {
-			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			limparTela();
 			System.out.println("Nome ou senha errados.\n");
 			System.out.println("Pressione Enter para continuar...");
 			scanner.nextLine();
-			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			limparTela();
 			return false;
 		}
 		else {
-			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			limparTela();
 			System.out.println("Conta Logada");
 			System.out.println("Pressione Enter para continuar...");
 			scanner.nextLine();
-			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+			limparTela();
 			return true;
 		}
+	}
+
+	private static void opçãoInvalida(Scanner scanner) throws IOException, InterruptedException{
+		limparTela();
+		System.out.println("Digite uma opção válida.");
+		System.out.println("Pressione Enter para continuar...");
+		scanner.nextLine();
+		limparTela();
+	}
+	private static void limparTela() throws IOException, InterruptedException {
+		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	}
 }
