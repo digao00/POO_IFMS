@@ -76,40 +76,40 @@ public class SteamApp {
 						case 2:
 							while (true) {
 								try {
-										limparTela();
-										System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
-										int jogo = scanner.nextInt();
-										scanner.nextLine();
-										if (jogo == 0) {
-											break;
-										}
-										comprarJogo(conexao, scanner, jogo);
+									limparTela();
+									System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
+									int jogo = scanner.nextInt();
+									scanner.nextLine();
+									if (jogo == 0) {
 										break;
 									}
-									catch (InvalidIdExeption e) {
-										limparTela();
-										System.out.println("Digite um id válido.");
-										System.out.println("Pressione Enter para continuar...");
-										scanner.nextLine();
-									}
-									catch (InputMismatchException e) {
-										scanner.nextLine();
-										limparTela();
-										System.out.println("Digite um id válido.");
-										System.out.println("Pressione Enter para continuar...");
-										scanner.nextLine();
-									}
-									catch (AlreadyPurchasedGameExeption e) {
-										limparTela();
-										System.out.println(e.getMessage());
-										System.out.println("Pressione Enter para continuar...");
-										scanner.nextLine();
-									}
+									comprarJogo(conexao, scanner, jogo);
+									break;
 								}
-								break;
+								catch (InvalidIdExeption e) {
+									limparTela();
+									System.out.println("Digite um id válido.");
+									System.out.println("Pressione Enter para continuar...");
+									scanner.nextLine();
+								}
+								catch (InputMismatchException e) {
+									scanner.nextLine();
+									limparTela();
+									System.out.println("Digite um id válido.");
+									System.out.println("Pressione Enter para continuar...");
+									scanner.nextLine();
+								}
+								catch (AlreadyPurchasedGameExeption e) {
+									limparTela();
+									System.out.println(e.getMessage());
+									System.out.println("Pressione Enter para continuar...");
+									scanner.nextLine();
+								}
+							}
+							break;
 						case 3:
 							limparTela();
-							mostrarBiblioteca(conexao);
+							mostrarBiblioteca(conexao, scanner);
 	            	        break;
 	            	    case 4:
 							if (deletarConta(conexao, scanner)) {
@@ -138,16 +138,14 @@ public class SteamApp {
         }
 	}
 
+	// Métodos
 
-
-
-	
     private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
 		System.out.printf("\nDigite um nome de usuário: ");
 		String nome = scanner.nextLine().trim();
 		System.out.printf("\nDigite uma senha: ");
 		String senha = scanner.nextLine().trim();
-		if (nome.isEmpty() || senha.isEmpty() || nome.contains(" ") || senha.contains(" ") || senha.length() < 8) {
+		if (nome.isEmpty() || senha.isEmpty() || nome.contains(" ") || senha.contains(" ") || senha.length() < 8 || nome.length() < 3) {
 			limparTela();
 			System.out.println("Nome de usuário indisponível");
 			System.out.println("Pressione Enter para continuar...");
@@ -156,8 +154,10 @@ public class SteamApp {
 			return false;
 		}
         String sql = "INSERT INTO jogador (nome, senha) VALUES (?, ?)";
-		String sql2 = "SELECT * FROM jogador WHERE nome = '" + nome + "'";
-        try (PreparedStatement stmt2 = conexao.prepareStatement(sql2); ResultSet rs = stmt2.executeQuery()) {
+		String sql2 = "SELECT * FROM jogador WHERE nome = ? ";
+        try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
+			stmt2.setString(1, nome);
+			ResultSet rs = stmt2.executeQuery();
 			while (rs.next()) {
 				limparTela();
 				System.out.println("Nome de usuário indisponível");
@@ -185,9 +185,6 @@ public class SteamApp {
 		}
     }
 
-
-
-
 	private static void mostrarLoja(Connection conexao, Scanner scanner) throws SQLException {
         String sql = "SELECT * FROM jogos";
         try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -199,34 +196,35 @@ public class SteamApp {
 		scanner.nextLine();
     }
 	
-
-
-
-	@SuppressWarnings("resource")
-	private static void mostrarBiblioteca(Connection conexao) throws SQLException {
-		String sql = "SELECT * FROM public.jogos, public.jogador_jogos WHERE jogador_jogos.id_jogador = " + userID + " AND jogos.id = jogador_jogos.id_jogo";
-		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+	private static void mostrarBiblioteca(Connection conexao, Scanner scanner) throws SQLException {
+		String sql = "SELECT * FROM public.jogos, public.jogador_jogos WHERE jogador_jogos.id_jogador = ? AND jogos.id = jogador_jogos.id_jogo";
+		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+			stmt.setInt(1, userID);
+			ResultSet rs = stmt.executeQuery();
 			System.out.println("Sua biblioteca: ");
 			while (rs.next()) {
 				System.out.println(rs.getString("nome"));
 			}
 			System.out.println("\nPressione Enter para continuar...");
-			new Scanner(System.in).nextLine();
+			scanner.nextLine();
 		}
 	}
     
-
-
 	private static void comprarJogo(Connection conexao, Scanner scanner, int jogo) throws SQLException, IOException, InterruptedException, InvalidIdExeption, AlreadyPurchasedGameExeption {
-		String sql3 = "SELECT * FROM jogador_jogos WHERE id_jogador = "+ userID + " AND id_jogo = "+ jogo;
+		String sql3 = "SELECT * FROM jogador_jogos WHERE id_jogador = ? AND id_jogo = ? ";
 		String sql2 = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (?, ?)";
-		String sql = "SELECT * FROM jogos WHERE id = " + jogo;
-		try (PreparedStatement stmt3 = conexao.prepareStatement(sql3); ResultSet rs2 = stmt3.executeQuery()) {
+		String sql = "SELECT * FROM jogos WHERE id = ? ";
+		try (PreparedStatement stmt3 = conexao.prepareStatement(sql3)) {
+			stmt3.setInt(1, userID);
+			stmt3.setInt(2, jogo);
+			ResultSet rs2 = stmt3.executeQuery();
 			if (rs2.next()) {
 				throw new AlreadyPurchasedGameExeption("Jogo selecionado ja está disponivel em sua conta");
 			}
 		}
-		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery();) {
+		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+			stmt.setInt(1, jogo);
+			ResultSet rs = stmt.executeQuery();
 			if (!rs.next()) {
 				throw new InvalidIdExeption("Erro: ID inválido");
 			}
@@ -243,7 +241,7 @@ public class SteamApp {
 	}
 
 	private static boolean deletarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
-		String sql = "DELETE FROM jogador_jogos WHERE id_jogador = "+ userID + "; DELETE FROM jogador WHERE id = " + userID;
+		String sql = "DELETE FROM jogador_jogos WHERE id_jogador = ?; DELETE FROM jogador WHERE id = ? ";
 		limparTela();
 		while (true) {
 			System.out.println("Você tem certeza que quer deletar sua conta? (y/n)");
@@ -251,6 +249,8 @@ public class SteamApp {
 			switch (resposta) {
 				case "y","Y":
 					try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+						stmt.setInt(1, userID);
+						stmt.setInt(2, userID);
 						stmt.executeUpdate();
 						System.out.println("Alma libertada");
 					}
@@ -264,10 +264,12 @@ public class SteamApp {
 		}
 	}
 
-
 	private static boolean login(Connection conexao, String nome, String senha, Scanner scanner) throws SQLException, IOException, InterruptedException {
-		String sql = "SELECT * FROM jogador WHERE nome = '" + nome + "' AND senha = '" + senha + "'";
-		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+		String sql = "SELECT * FROM jogador WHERE nome = ? AND senha = ? ";
+		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+			stmt.setString(1, nome);
+			stmt.setString(2, senha);
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				userID = rs.getInt("id");
 			}
@@ -297,6 +299,7 @@ public class SteamApp {
 		scanner.nextLine();
 		limparTela();
 	}
+
 	private static void limparTela() throws IOException, InterruptedException {
 		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
 	}
