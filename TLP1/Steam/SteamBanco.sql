@@ -5,7 +5,7 @@
 -- Dumped from database version 17.2
 -- Dumped by pg_dump version 17.1
 
--- Started on 2025-04-08 16:29:46
+-- Started on 2025-04-10 16:01:43
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -179,11 +179,13 @@ ALTER TABLE ONLY public.jogos ALTER COLUMN id SET DEFAULT nextval('public.jogos_
 -- Data for Name: jogador; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.jogador VALUES (5, 'digao', '1234');
 INSERT INTO public.jogador VALUES (6, 'joao', '123');
 INSERT INTO public.jogador VALUES (8, 'jao', '0609');
 INSERT INTO public.jogador VALUES (9, 'hatsu', '6969');
 INSERT INTO public.jogador VALUES (10, 'jaozin', '555');
+INSERT INTO public.jogador VALUES (12, 'yami', '123');
+INSERT INTO public.jogador VALUES (16, 'digao', '1234');
+INSERT INTO public.jogador VALUES (22, 'yamiz0', '12345678');
 
 
 --
@@ -192,10 +194,11 @@ INSERT INTO public.jogador VALUES (10, 'jaozin', '555');
 -- Data for Name: jogador_jogos; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.jogador_jogos VALUES (1, 6, 5);
-INSERT INTO public.jogador_jogos VALUES (2, 5, 5);
-INSERT INTO public.jogador_jogos VALUES (4, 8, 5);
-INSERT INTO public.jogador_jogos VALUES (6, 7, 5);
+INSERT INTO public.jogador_jogos VALUES (7, 7, 12);
+INSERT INTO public.jogador_jogos VALUES (9, 5, 16);
+INSERT INTO public.jogador_jogos VALUES (12, 6, 16);
+INSERT INTO public.jogador_jogos VALUES (15, 5, 22);
+INSERT INTO public.jogador_jogos VALUES (16, 7, 22);
 
 
 --
@@ -208,6 +211,10 @@ INSERT INTO public.jogos VALUES (5, 'Rust');
 INSERT INTO public.jogos VALUES (6, 'Battlefield 4');
 INSERT INTO public.jogos VALUES (7, 'CS 2');
 INSERT INTO public.jogos VALUES (8, 'Unturned');
+INSERT INTO public.jogos VALUES (4, 'FIFA 24');
+INSERT INTO public.jogos VALUES (3, 'Ultrakill');
+INSERT INTO public.jogos VALUES (2, 'Garry''s Mod');
+INSERT INTO public.jogos VALUES (1, 'Half-Life 2');
 
 
 --
@@ -216,7 +223,7 @@ INSERT INTO public.jogos VALUES (8, 'Unturned');
 -- Name: jogador_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.jogador_id_seq', 11, true);
+SELECT pg_catalog.setval('public.jogador_id_seq', 22, true);
 
 
 --
@@ -225,7 +232,7 @@ SELECT pg_catalog.setval('public.jogador_id_seq', 11, true);
 -- Name: jogador_jogos_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.jogador_jogos_id_seq', 6, true);
+SELECT pg_catalog.setval('public.jogador_jogos_id_seq', 16, true);
 
 
 --
@@ -292,7 +299,7 @@ REVOKE USAGE ON SCHEMA public FROM PUBLIC;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 
--- Completed on 2025-04-08 16:29:46
+-- Completed on 2025-04-10 16:01:43
 
 --
 -- PostgreSQL database dump complete

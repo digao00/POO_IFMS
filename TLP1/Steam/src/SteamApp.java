@@ -67,6 +67,7 @@ public class SteamApp {
 					System.out.println("3 - Sua biblioteca");
 					System.out.println("4 - Excluir conta");
 					System.out.println("5 - Sair");
+					System.out.printf("\n-> ");
 					int opcao = scanner.nextInt();
 					scanner.nextLine();
 
@@ -132,6 +133,7 @@ public class SteamApp {
 	// Métodos
 
 	private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
+		System.out.println("Usuário deve conter no mínimo 3 carácteres e sem espaço\nSenha deve conter no mínimo 8 caractéres e sem espaços");
 		System.out.printf("\nDigite um nome de usuário: ");
 		String nome = scanner.nextLine().trim();
 		System.out.printf("\nDigite uma senha: ");
@@ -166,7 +168,7 @@ public class SteamApp {
 	}
 
 	private static void mostrarLoja(Connection conexao, Scanner scanner) throws SQLException {
-		String sql = "SELECT * FROM jogos";
+		String sql = "SELECT * FROM jogos ORDER BY id ASC";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 			while (rs.next()) {
 				System.out.printf("%s - %s\n", rs.getString("id"), rs.getString("nome"));
@@ -213,7 +215,7 @@ public class SteamApp {
 			int confirmation = 0;
 			while (confirmation == 0) {
 				limparTela();
-				System.out.printf("\nTem certeza que deseja comprar %s? (y/n)", rs.getString("nome"));
+				System.out.printf("\nTem certeza que deseja comprar %s? (y/n)\n", rs.getString("nome"));
 				String resposta = scanner.nextLine();
 				switch (resposta) {
 					case "y", "Y":
@@ -280,6 +282,9 @@ public class SteamApp {
 			return true;
 		}
 	}
+
+	//mudar senha e usuário
+	//adicionarSaldo()
 
 	private static void pauseComMsg(Scanner scanner, String msg) throws IOException, InterruptedException {
 		limparTela();
