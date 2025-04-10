@@ -9,17 +9,18 @@ import java.util.Scanner;
 import java.io.IOException;
 
 public class SteamApp {
-	
+
 	private static int userID;
+
 	public static void main(String[] args) throws IOException, InterruptedException {
 
-        String url = "jdbc:postgresql://localhost:5432/Steam";
-        String usuario = "postgres";
-        String senha = "postgres"; //F101 = "postgresql" F103 = "postgres"
-        Scanner scanner = new Scanner(System.in);
-        
-        try (Connection conexao = DriverManager.getConnection(url, usuario, senha)) {
-            System.out.println("Conexão com o banco de dados estabelecida!");
+		String url = "jdbc:postgresql://localhost:5432/Steam";
+		String usuario = "postgres";
+		String senha = "postgres"; // F101 = "postgresql" F103 = "postgres"
+		Scanner scanner = new Scanner(System.in);
+
+		try (Connection conexao = DriverManager.getConnection(url, usuario, senha)) {
+			System.out.println("Conexão com o banco de dados estabelecida!");
 			int io = 1;
 			while (io == 1) {
 				try {
@@ -31,47 +32,50 @@ public class SteamApp {
 					int opcao = scanner.nextInt();
 					scanner.nextLine();
 					limparTela();
-					
+
 					switch (opcao) {
 						case 1:
-							if (criarConta(conexao, scanner)) {io = 0;}
+							if (criarConta(conexao, scanner)) {
+								io = 0;
+							}
 							break;
 						case 2:
 							System.out.printf("\nNome: ");
 							String nomeLogin = scanner.nextLine();
 							System.out.printf("\nSenha: ");
 							String senhaLogin = scanner.nextLine();
-							if (login(conexao, nomeLogin, senhaLogin, scanner)) {io = 0;}
+							if (login(conexao, nomeLogin, senhaLogin, scanner)) {
+								io = 0;
+							}
 							break;
 						default:
 							pauseComMsg(scanner, "Digite uma opção válida.");
 							break;
 					}
-				}
-				catch (InputMismatchException e) {
+				} catch (InputMismatchException e) {
 					scanner.nextLine();
 					pauseComMsg(scanner, "Digite uma opção válida.");
 				}
 			}
 
-	        while (true) {
+			while (true) {
 				try {
 					limparTela();
-	            	System.out.println("\nEscolha uma opção:");
-	            	System.out.println("1 - Loja");
-	            	System.out.println("2 - Comprar jogo");
-	            	System.out.println("3 - Sua biblioteca");
-	            	System.out.println("4 - Excluir conta");
-	            	System.out.println("5 - Sair");
-	            	int opcao = scanner.nextInt();
-	            	scanner.nextLine(); 
-					
-	            	switch (opcao) {
-	            	    case 1:
+					System.out.println("\nEscolha uma opção:");
+					System.out.println("1 - Loja");
+					System.out.println("2 - Comprar jogo");
+					System.out.println("3 - Sua biblioteca");
+					System.out.println("4 - Excluir conta");
+					System.out.println("5 - Sair");
+					int opcao = scanner.nextInt();
+					scanner.nextLine();
+
+					switch (opcao) {
+						case 1:
 							limparTela();
-	            	    	mostrarLoja(conexao, scanner);
+							mostrarLoja(conexao, scanner);
 							limparTela();
-	            	        break;
+							break;
 						case 2:
 							while (true) {
 								try {
@@ -84,15 +88,12 @@ public class SteamApp {
 									}
 									comprarJogo(conexao, scanner, jogo);
 									break;
-								}
-								catch (InvalidIdExeption e) {
+								} catch (InvalidIdExeption e) {
 									pauseComMsg(scanner, "Digite um id válido");
-								}
-								catch (InputMismatchException e) {
+								} catch (InputMismatchException e) {
 									scanner.nextLine();
 									pauseComMsg(scanner, "Digite um id válido");
-								}
-								catch (AlreadyPurchasedGameExeption e) {
+								} catch (AlreadyPurchasedGameExeption e) {
 									pauseComMsg(scanner, e.getMessage());
 								}
 							}
@@ -100,40 +101,37 @@ public class SteamApp {
 						case 3:
 							limparTela();
 							mostrarBiblioteca(conexao, scanner);
-	            	        break;
-	            	    case 4:
+							break;
+						case 4:
 							if (deletarConta(conexao, scanner)) {
 								limparTela();
 								System.out.println("Saindo...");
 								return;
 							}
 							limparTela();
-	            	        break;
-	            	    case 5:
-	            	        System.out.println("Saindo...");
-	            	        return;
-	            	    default:
+							break;
+						case 5:
+							System.out.println("Saindo...");
+							return;
+						default:
 							pauseComMsg(scanner, "Digite uma opção válida.");
 							break;
-	            	}
-				}
-				catch (InputMismatchException e) {
+					}
+				} catch (InputMismatchException e) {
 					scanner.nextLine();
 					pauseComMsg(scanner, "Digite uma opção válida.");
 				}
-	        }
-        } 
-		catch (SQLException e) {
-            System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
-        }
-		finally {
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
+		} finally {
 			scanner.close();
 		}
 	}
 
 	// Métodos
 
-    private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
+	private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
 		System.out.printf("\nDigite um nome de usuário: ");
 		String nome = scanner.nextLine().trim();
 		System.out.printf("\nDigite uma senha: ");
@@ -142,9 +140,10 @@ public class SteamApp {
 			pauseComMsg(scanner, "Nome de usuário indisponível.");
 			return false;
 		}
-        String sql = "INSERT INTO jogador (nome, senha) VALUES (?, ?)";
+		
+		String sql = "INSERT INTO jogador (nome, senha) VALUES (?, ?)";
 		String sql2 = "SELECT * FROM jogador WHERE nome = ? ";
-        try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
+		try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
 			stmt2.setString(1, nome);
 			ResultSet rs = stmt2.executeQuery();
 			while (rs.next()) {
@@ -153,8 +152,8 @@ public class SteamApp {
 			}
 			try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 				stmt.setString(1, nome);
-        		stmt.setString(2, senha);
-        		stmt.executeUpdate();	 
+				stmt.setString(2, senha);
+				stmt.executeUpdate();
 				try (ResultSet rs2 = stmt2.executeQuery()) {
 					while (rs2.next()) {
 						userID = rs2.getInt("id");
@@ -164,19 +163,19 @@ public class SteamApp {
 				return true;
 			}
 		}
-    }
+	}
 
 	private static void mostrarLoja(Connection conexao, Scanner scanner) throws SQLException {
-        String sql = "SELECT * FROM jogos";
-        try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                System.out.printf("%s - %s\n", rs.getString("id"),rs.getString("nome"));
-            }
-        }
+		String sql = "SELECT * FROM jogos";
+		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+			while (rs.next()) {
+				System.out.printf("%s - %s\n", rs.getString("id"), rs.getString("nome"));
+			}
+		}
 		System.out.println("Pressione Enter para sair...");
 		scanner.nextLine();
-    }
-	
+	}
+
 	private static void mostrarBiblioteca(Connection conexao, Scanner scanner) throws SQLException {
 		String sql = "SELECT * FROM public.jogos, public.jogador_jogos WHERE jogador_jogos.id_jogador = ? AND jogos.id = jogador_jogos.id_jogo";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
@@ -190,8 +189,9 @@ public class SteamApp {
 			scanner.nextLine();
 		}
 	}
-    
-	private static void comprarJogo(Connection conexao, Scanner scanner, int jogo) throws SQLException, IOException, InterruptedException, InvalidIdExeption, AlreadyPurchasedGameExeption {
+
+	private static void comprarJogo(Connection conexao, Scanner scanner, int jogo)
+			throws SQLException, IOException, InterruptedException, InvalidIdExeption, AlreadyPurchasedGameExeption {
 		String sql3 = "SELECT * FROM jogador_jogos WHERE id_jogador = ? AND id_jogo = ? ";
 		String sql2 = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (?, ?)";
 		String sql = "SELECT * FROM jogos WHERE id = ? ";
@@ -216,14 +216,14 @@ public class SteamApp {
 				System.out.printf("\nTem certeza que deseja comprar %s? (y/n)", rs.getString("nome"));
 				String resposta = scanner.nextLine();
 				switch (resposta) {
-					case "y","Y":
+					case "y", "Y":
 						confirmation = 1;
 						break;
-					case "n","N":
+					case "n", "N":
 						return;
 					default:
-					pauseComMsg(scanner, "Digite uma opção válida.");
-					break;
+						pauseComMsg(scanner, "Digite uma opção válida.");
+						break;
 				}
 			}
 			try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
@@ -236,14 +236,15 @@ public class SteamApp {
 		}
 	}
 
-	private static boolean deletarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
+	private static boolean deletarConta(Connection conexao, Scanner scanner)
+			throws SQLException, IOException, InterruptedException {
 		String sql = "DELETE FROM jogador_jogos WHERE id_jogador = ?; DELETE FROM jogador WHERE id = ? ";
 		limparTela();
 		while (true) {
 			System.out.println("Você tem certeza que quer deletar sua conta? (y/n)");
 			String resposta = scanner.nextLine();
 			switch (resposta) {
-				case "y","Y":
+				case "y", "Y":
 					try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 						stmt.setInt(1, userID);
 						stmt.setInt(2, userID);
@@ -251,7 +252,7 @@ public class SteamApp {
 						System.out.println("Alma libertada");
 					}
 					return true;
-				case "n","N":
+				case "n", "N":
 					return false;
 				default:
 					pauseComMsg(scanner, "Digite uma opção válida.");
@@ -260,7 +261,8 @@ public class SteamApp {
 		}
 	}
 
-	private static boolean login(Connection conexao, String nome, String senha, Scanner scanner) throws SQLException, IOException, InterruptedException {
+	private static boolean login(Connection conexao, String nome, String senha, Scanner scanner)
+			throws SQLException, IOException, InterruptedException {
 		String sql = "SELECT * FROM jogador WHERE nome = ? AND senha = ? ";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.setString(1, nome);
@@ -273,14 +275,13 @@ public class SteamApp {
 		if (userID == 0) {
 			pauseComMsg(scanner, "Nome ou senha errados.");
 			return false;
-		}
-		else {
+		} else {
 			pauseComMsg(scanner, "Conta Logada.");
 			return true;
 		}
 	}
 
-	private static void pauseComMsg(Scanner scanner, String msg) throws IOException, InterruptedException{
+	private static void pauseComMsg(Scanner scanner, String msg) throws IOException, InterruptedException {
 		limparTela();
 		System.out.println(msg);
 		System.out.println("Pressione Enter para continuar...");
