@@ -62,11 +62,11 @@ public class SteamApp {
 				try {
 					limparTela();
 					System.out.println("\nEscolha uma opção:");
-					System.out.println("1 - Loja");
+					System.out.println("1 - Mostrar Loja");
 					System.out.println("2 - Comprar jogo");
 					System.out.println("3 - Sua biblioteca");
 					System.out.println("4 - Excluir conta");
-					System.out.println("5 - Sair");
+					System.out.println("0 - Sair");
 					System.out.printf("\n-> ");
 					int opcao = scanner.nextInt();
 					scanner.nextLine();
@@ -112,6 +112,8 @@ public class SteamApp {
 							limparTela();
 							break;
 						case 5:
+							break;
+						case 0:
 							System.out.println("Saindo...");
 							return;
 						default:
@@ -251,7 +253,7 @@ public class SteamApp {
 						stmt.setInt(1, userID);
 						stmt.setInt(2, userID);
 						stmt.executeUpdate();
-						System.out.println("Alma libertada");
+						pauseComMsg(scanner, "Alma libertada");
 					}
 					return true;
 				case "n", "N":
@@ -284,6 +286,41 @@ public class SteamApp {
 	}
 
 	//mudar senha e usuário
+	private static void mudarSenha(Connection conexao,Scanner scanner) throws SQLException, IOException, InterruptedException{
+		limparTela();
+		String sql2 = "UPDATE senha FROM jogador WHERE id = ?";
+		String sql = "SELECT * FROM jogador WHERE id = ?";
+		System.out.printf("Digite sua senha: ");
+		String senha = scanner.nextLine();
+		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+			stmt.setInt(1, userID);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				if (senha != rs.getString("senha")) {
+					pauseComMsg(scanner, "Senha incorreta.");
+					return;
+				}
+				else {
+					while (true) {
+						limparTela();
+						System.out.printf("\nDigite a nova senha: ");
+						String senhaNova = scanner.nextLine().trim();
+						if (senhaNova.isEmpty() || senhaNova.contains(" ") || senhaNova.length() < 8) {
+							pauseComMsg(scanner, "Senha inválida.");
+						}
+						else {
+							try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
+								stmt2.setInt(1, userID);
+								stmt2.executeUpdate();
+								pauseComMsg(scanner, "Senha Atualizada.");
+							}
+						}
+					}
+				}
+			}
+		}
+		
+	}
 	//adicionarSaldo()
 
 	private static void pauseComMsg(Scanner scanner, String msg) throws IOException, InterruptedException {
