@@ -65,7 +65,7 @@ public class SteamApp {
 					System.out.println("1 - Mostrar Loja");
 					System.out.println("2 - Comprar jogo");
 					System.out.println("3 - Sua biblioteca");
-					System.out.println("4 - Excluir conta");
+					System.out.println("4 - Personalizar");
 					System.out.println("0 - Sair");
 					System.out.printf("\n-> ");
 					int opcao = scanner.nextInt();
@@ -104,13 +104,38 @@ public class SteamApp {
 							mostrarBiblioteca(conexao, scanner);
 							break;
 						case 4:
-							if (deletarConta(conexao, scanner)) {
-								limparTela();
-								System.out.println("Saindo...");
-								return;
-							}
 							limparTela();
-							break;
+							int confirmation = 0;
+							while (confirmation == 0) {
+								System.out.println("1 - Mudar senha");
+								System.out.println("2 - Excluir conta");
+								System.out.println("0 - Voltar");
+								System.out.printf("-> ");
+								opcao = scanner.nextInt();
+								scanner.nextLine();
+								switch (opcao) {
+									case 1:
+										while (true) {
+											if (mudarSenha(conexao, scanner)) {
+												confirmation = 1;
+												break;
+											}
+										}
+									case 2: 
+										if (deletarConta(conexao, scanner)) {
+											limparTela();
+											System.out.println("Saindo...");
+											return;
+										}
+										limparTela();
+									case 0:
+										limparTela();
+										confirmation = 1;
+										break;
+									default:
+										break;
+								}
+							}
 						case 5:
 							break;
 						case 0:
@@ -286,7 +311,7 @@ public class SteamApp {
 	}
 
 	//mudar senha e usuário
-	private static void mudarSenha(Connection conexao,Scanner scanner) throws SQLException, IOException, InterruptedException{
+	private static boolean mudarSenha(Connection conexao,Scanner scanner) throws SQLException, IOException, InterruptedException{
 		limparTela();
 		String sql2 = "UPDATE senha FROM jogador WHERE id = ?";
 		String sql = "SELECT * FROM jogador WHERE id = ?";
@@ -298,7 +323,7 @@ public class SteamApp {
 			while (rs.next()) {
 				if (senha != rs.getString("senha")) {
 					pauseComMsg(scanner, "Senha incorreta.");
-					return;
+					return false;
 				}
 				else {
 					while (true) {
@@ -307,19 +332,21 @@ public class SteamApp {
 						String senhaNova = scanner.nextLine().trim();
 						if (senhaNova.isEmpty() || senhaNova.contains(" ") || senhaNova.length() < 8) {
 							pauseComMsg(scanner, "Senha inválida.");
+							return false;
 						}
 						else {
 							try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
 								stmt2.setInt(1, userID);
 								stmt2.executeUpdate();
 								pauseComMsg(scanner, "Senha Atualizada.");
+								return true;
 							}
 						}
 					}
 				}
 			}
 		}
-		
+		return false;
 	}
 	//adicionarSaldo()
 
