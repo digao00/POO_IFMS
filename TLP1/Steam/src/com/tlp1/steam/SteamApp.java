@@ -1,3 +1,4 @@
+package com.tlp1.steam;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,6 +7,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
+import com.tlp1.steam.controller.SteamController;
+import com.tlp1.steam.view.SteamView;
+
 import java.io.IOException;
 
 public class SteamApp {
@@ -13,10 +18,12 @@ public class SteamApp {
 	private static int userID;
 
 	public static void main(String[] args) throws IOException, InterruptedException {
+		SteamView view = new SteamView();
+		SteamController controller = new SteamController(view);
 
 		String url = "jdbc:postgresql://localhost:5432/Steam";
 		String usuario = "postgres";
-		String senha = "postgres"; // F101 = "postgresql" F103 = "postgres"
+		String senha = "postgresql"; // F101 = "postgresql" F103 = "postgres"
 		Scanner scanner = new Scanner(System.in);
 
 		try (Connection conexao = DriverManager.getConnection(url, usuario, senha)) {
@@ -107,33 +114,42 @@ public class SteamApp {
 							limparTela();
 							int confirmation = 0;
 							while (confirmation == 0) {
-								System.out.println("1 - Mudar senha");
-								System.out.println("2 - Excluir conta");
-								System.out.println("0 - Voltar");
-								System.out.printf("-> ");
-								opcao = scanner.nextInt();
-								scanner.nextLine();
-								switch (opcao) {
-									case 1:
-										while (true) {
-											if (mudarSenha(conexao, scanner)) {
-												confirmation = 1;
-												break;
+								try {
+									System.out.println("1 - Mudar senha");
+									System.out.println("2 - Excluir conta");
+									System.out.println("0 - Voltar");
+									System.out.printf("-> ");
+									opcao = scanner.nextInt();
+									scanner.nextLine();
+									switch (opcao) {
+										case 1:
+											while (true) {
+												if (mudarSenha(conexao, scanner)) {
+													confirmation = 1;
+													break;
+												}
 											}
-										}
-									case 2: 
-										if (deletarConta(conexao, scanner)) {
+										case 2: 
+											if (deletarConta(conexao, scanner)) {
+												limparTela();
+												System.out.println("Saindo...");
+												return;
+											}
 											limparTela();
-											System.out.println("Saindo...");
-											return;
-										}
-										limparTela();
-									case 0:
-										limparTela();
-										confirmation = 1;
-										break;
-									default:
-										break;
+										case 0:
+											limparTela();
+											confirmation = 1;
+											break;
+										default:
+											limparTela();
+											pauseComMsg(scanner, "Opção inválida");
+											break;
+									}
+								}
+								catch (InputMismatchException e) {
+									scanner.nextLine();
+									limparTela();
+									pauseComMsg(scanner, "Opção inválida");
 								}
 							}
 						case 5:
