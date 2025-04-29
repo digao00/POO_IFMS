@@ -11,7 +11,7 @@ public class SteamView {
         scanner = new Scanner(System.in);
     }
 
-    public void menuLogin() throws IOException, InterruptedException{
+    public void menuLogin() throws IOException, InterruptedException {
         limparTela();
         System.out.println("\n###### Steam ######\n");
         System.out.println("1 - Criar conta");
@@ -19,7 +19,8 @@ public class SteamView {
         System.out.printf("\n-> ");
     }
 
-    public void menuIniciar() {
+    public void menuIniciar() throws IOException, InterruptedException {
+        limparTela();
         System.out.println("\nEscolha uma opção:");
         System.out.println("1 - Mostrar Loja");
         System.out.println("2 - Comprar jogo");
@@ -33,7 +34,7 @@ public class SteamView {
         System.out.printf(msg);
     }
 
-    public int lerInt() throws IOException, InterruptedException{
+    public int lerInt() throws IOException, InterruptedException {
         try {
             return scanner.nextInt();
         } catch (InputMismatchException e) {

@@ -9,6 +9,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import com.tlp1.steam.controller.SteamController;
+import com.tlp1.steam.model.Jogador;
+import com.tlp1.steam.model.SteamDAO;
 import com.tlp1.steam.view.SteamView;
 
 import java.io.IOException;
@@ -19,7 +21,8 @@ public class SteamApp {
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 		SteamView view = new SteamView();
-		SteamController controller = new SteamController(view);
+		SteamDAO dao = new SteamDAO();
+		SteamController controller = new SteamController(view, dao);
 
 		String url = "jdbc:postgresql://localhost:5432/Steam";
 		String usuario = "postgres";
@@ -27,7 +30,6 @@ public class SteamApp {
 		Scanner scanner = new Scanner(System.in);
 
 		try (Connection conexao = DriverManager.getConnection(url, usuario, senha)) {
-			System.out.println("Conexão com o banco de dados estabelecida!");
 			int io = 1;
 			while (io == 1) {
 				try {
