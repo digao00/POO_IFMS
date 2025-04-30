@@ -4,12 +4,6 @@ public class Jogador {
     private int id;
     private String nome;
     private String senha;
-
-    public Jogador(String nome, String senha) {
-        this.nome = nome;
-        this.senha = senha;
-    }
-
     
     public int getId() {
         return id;

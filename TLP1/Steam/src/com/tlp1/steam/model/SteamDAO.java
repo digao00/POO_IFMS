@@ -11,7 +11,7 @@ import com.tlp1.steam.view.SteamView;
 
 public class SteamDAO {
 
-    public int criarConta(Jogador player, SteamView view) throws SQLException, IOException, InterruptedException {
+    public boolean criarConta(Jogador player, SteamView view) throws SQLException, IOException, InterruptedException {
         try (Connection conexao = DatabaseConnection.getConnection()) {
             String sql = "INSERT INTO jogador (nome, senha) VALUES (?, ?)";
             String sql2 = "SELECT * FROM jogador WHERE nome = ? ";
@@ -20,7 +20,7 @@ public class SteamDAO {
                 ResultSet rs = stmt2.executeQuery();
                 while (rs.next()) {
                     view.pauseComMsg("Nome de usuário indisponível.");
-                    return 0;
+                    return false;
                 }
                 try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
                     stmt.setString(1, player.getNome());
@@ -30,12 +30,34 @@ public class SteamDAO {
                         while (rs2.next()) {
                             player.setId(rs2.getInt("id"));
                             view.pauseComMsg("Conta criada com sucesso.");
-                            return 1;
+                            return true;
                         }
+                        return false;
                     }
-                    return 0;
                 }
             }
         }
     }
+
+    public boolean login(Jogador player, SteamView view) throws SQLException, IOException, InterruptedException {
+        try (Connection conexao = DatabaseConnection.getConnection()) {
+            String sql = "SELECT * FROM jogador WHERE nome = ? AND senha = ? ";
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setString(1, player.getNome());
+                stmt.setString(2, player.getSenha());
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    player.setId(rs.getInt("id"));
+                }
+            }
+            if (player.getId() == 0) {
+                view.pauseComMsg("Nome ou senha errados.");
+                return false;
+            } else {
+                view.pauseComMsg("Conta Logada.");
+                return true;
+            }
+        }
+    }
+
 }

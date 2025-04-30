@@ -22,7 +22,8 @@ public class SteamApp {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		SteamView view = new SteamView();
 		SteamDAO dao = new SteamDAO();
-		SteamController controller = new SteamController(view, dao);
+		Jogador player = new Jogador();
+		SteamController controller = new SteamController(view, dao, player);
 
 		String url = "jdbc:postgresql://localhost:5432/Steam";
 		String usuario = "postgres";
@@ -90,7 +91,8 @@ public class SteamApp {
 							while (true) {
 								try {
 									limparTela();
-									System.out.printf("\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
+									System.out.printf(
+											"\nDigite o id do jogo que queira comprar (digite 0 para voltar): ");
 									int jogo = scanner.nextInt();
 									scanner.nextLine();
 									if (jogo == 0) {
@@ -131,7 +133,7 @@ public class SteamApp {
 													break;
 												}
 											}
-										case 2: 
+										case 2:
 											if (deletarConta(conexao, scanner)) {
 												limparTela();
 												System.out.println("Saindo...");
@@ -147,8 +149,7 @@ public class SteamApp {
 											pauseComMsg(scanner, "Opção inválida");
 											break;
 									}
-								}
-								catch (InputMismatchException e) {
+								} catch (InputMismatchException e) {
 									scanner.nextLine();
 									limparTela();
 									pauseComMsg(scanner, "Opção inválida");
@@ -177,17 +178,20 @@ public class SteamApp {
 
 	// Métodos
 
-	private static boolean criarConta(Connection conexao, Scanner scanner) throws SQLException, IOException, InterruptedException {
-		System.out.println("Usuário deve conter no mínimo 3 carácteres e sem espaço\nSenha deve conter no mínimo 8 caractéres e sem espaços");
+	private static boolean criarConta(Connection conexao, Scanner scanner)
+			throws SQLException, IOException, InterruptedException {
+		System.out.println(
+				"Usuário deve conter no mínimo 3 carácteres e sem espaço\nSenha deve conter no mínimo 8 caractéres e sem espaços");
 		System.out.printf("\nDigite um nome de usuário: ");
 		String nome = scanner.nextLine().trim();
 		System.out.printf("\nDigite uma senha: ");
 		String senha = scanner.nextLine().trim();
-		if (nome.isEmpty() || senha.isEmpty() || nome.contains(" ") || senha.contains(" ") || senha.length() < 8 || nome.length() < 3) {
+		if (nome.isEmpty() || senha.isEmpty() || nome.contains(" ") || senha.contains(" ") || senha.length() < 8
+				|| nome.length() < 3) {
 			pauseComMsg(scanner, "Nome de usuário indisponível.");
 			return false;
 		}
-		
+
 		String sql = "INSERT INTO jogador (nome, senha) VALUES (?, ?)";
 		String sql2 = "SELECT * FROM jogador WHERE nome = ? ";
 		try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
@@ -328,8 +332,9 @@ public class SteamApp {
 		}
 	}
 
-	//mudar senha e usuário
-	private static boolean mudarSenha(Connection conexao,Scanner scanner) throws SQLException, IOException, InterruptedException{
+	// mudar senha e usuário
+	private static boolean mudarSenha(Connection conexao, Scanner scanner)
+			throws SQLException, IOException, InterruptedException {
 		limparTela();
 		String sql2 = "UPDATE senha FROM jogador WHERE id = ?";
 		String sql = "SELECT * FROM jogador WHERE id = ?";
@@ -342,8 +347,7 @@ public class SteamApp {
 				if (senha != rs.getString("senha")) {
 					pauseComMsg(scanner, "Senha incorreta.");
 					return false;
-				}
-				else {
+				} else {
 					while (true) {
 						limparTela();
 						System.out.printf("\nDigite a nova senha: ");
@@ -351,8 +355,7 @@ public class SteamApp {
 						if (senhaNova.isEmpty() || senhaNova.contains(" ") || senhaNova.length() < 8) {
 							pauseComMsg(scanner, "Senha inválida.");
 							return false;
-						}
-						else {
+						} else {
 							try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
 								stmt2.setInt(1, userID);
 								stmt2.executeUpdate();
@@ -366,7 +369,7 @@ public class SteamApp {
 		}
 		return false;
 	}
-	//adicionarSaldo()
+	// adicionarSaldo()
 
 	private static void pauseComMsg(Scanner scanner, String msg) throws IOException, InterruptedException {
 		limparTela();

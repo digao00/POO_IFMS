@@ -9,7 +9,7 @@ public class DatabaseConnection {
     private static final String usuario = "postgres";
     private static final String senha = "postgresql"; // F101 = "postgresql" F103 = "postgres"
 
-    public static Connection getConnection() throws SQLException{
+    public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, usuario, senha);
     }
 }
