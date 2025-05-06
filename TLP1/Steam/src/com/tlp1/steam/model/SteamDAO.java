@@ -60,4 +60,15 @@ public class SteamDAO {
         }
     }
 
+    public void mostrarLoja(SteamView view) throws SQLException, IOException, InterruptedException {
+        try (Connection conexao = DatabaseConnection.getConnection()) {
+            String sql = "SELECT * FROM jogos ORDER BY id ASC";
+            try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    view.msgf("%s - %s\n", rs.getString("id"), rs.getString("nome"));
+                }
+            }
+            view.pauseComMsg("Pressione Enter para sair...");
+        }
+    }
 }

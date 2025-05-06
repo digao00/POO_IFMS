@@ -24,7 +24,6 @@ public class SteamController {
             while (io) {
                 view.menuLogin();
                 int op = view.lerInt();
-                view.lerString();
 
                 switch (op) {
                     case 1:
@@ -43,12 +42,43 @@ public class SteamController {
                 }
             }
             
+            io = true;
+            while (io) {
+                view.menuIniciar();
+                int op = view.lerInt();
+
+                switch (op) {
+                    case 1:
+                        mostralLoja();
+                        break;
+                    case 2:
+                        //comprarJogo()
+                        break;
+                    case 3:
+                        //mostrarBiblioteca()
+                        break;
+                    case 4:
+                        //personalizar
+                        break;
+                    case 0:
+                        view.limparTela();
+                        view.msg("Saindo...");
+                        io = false;
+                        break;
+                    default:
+                        view.pauseComMsg("Digite uma opção válida.");
+                        break;
+                }
+            }
+
         } catch (SQLException e) {
-            System.out.println("Erro ao conectar ao banco de dados: " + e.getMessage());
+            System.out.println("Erro com o banco de dados: " + e.getMessage());
         }
     }
 
     public boolean criarConta() throws SQLException, IOException, InterruptedException {
+        view.lerString();
+        view.limparTela();
         view.msg("Usuário deve conter no mínimo 3 carácteres e sem espaço\nSenha deve conter no mínimo 8 caractéres e sem espaços\n");
         view.msg("\nDigite um nome de usuário: ");
         String nome = view.lerString();
@@ -78,4 +108,7 @@ public class SteamController {
         return dao.login(player, view);
     }
 
+    public void mostralLoja() throws SQLException, IOException, InterruptedException {
+        dao.mostrarLoja(view);
+    }
 }

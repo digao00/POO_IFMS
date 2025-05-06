@@ -34,6 +34,10 @@ public class SteamView {
         System.out.printf(msg);
     }
 
+    public void msgf(String msg, Object ... args) {
+        System.out.printf(msg, args);
+    }
+
     public int lerInt() throws IOException, InterruptedException {
         try {
             return scanner.nextInt();
