@@ -16,7 +16,7 @@ public class LoginController {
         this.view = view;
     }
 
-    public boolean inicio() throws IOException, InterruptedException {
+    public boolean inicio() throws IOException, InterruptedException, SQLException{
         try {
             boolean io = true;
             while (io) {
@@ -42,9 +42,7 @@ public class LoginController {
                 }
             }
 
-        } catch (SQLException e) {
-            System.out.println("Erro com o banco de dados: " + e.getMessage());
-        }
+        } finally {}
         return false;
     }
 
@@ -78,7 +76,4 @@ public class LoginController {
         return dao.login(player, view);
     }
 
-    public void mostralLoja() throws SQLException, IOException, InterruptedException {
-        //dao.mostrarLoja(view);
-    }
 }
