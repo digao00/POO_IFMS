@@ -16,24 +16,27 @@ public class LoginController {
         this.view = view;
     }
 
-    public boolean inicio() throws IOException, InterruptedException, SQLException{
+    public Jogador inicio() throws IOException, InterruptedException, SQLException{
         try {
             boolean io = true;
             while (io) {
                 view.menuLogin();
                 int op = view.lerInt();
 
+                Jogador jogador = null;
                 switch (op) {
                     case 1:
-                        if (criarConta()) {
+                        jogador = criarConta();
+                        if (jogador != null) {
                             io = false;
-                            return true;
+                            return jogador;
                         }
                         break;
                     case 2:
-                        if (login()) {
+                        jogador = login();
+                        if (jogador != null) {
                             io = false;
-                            return true;
+                            return jogador;
                         }
                         break;
                     default:
@@ -43,10 +46,10 @@ public class LoginController {
             }
 
         } finally {}
-        return false;
+        return null;
     }
 
-    public boolean criarConta() throws SQLException, IOException, InterruptedException {
+    public Jogador criarConta() throws SQLException, IOException, InterruptedException {
         view.lerString();
         view.limparTela();
         view.msg("Usuário deve conter no mínimo 3 carácteres e sem espaço\nSenha deve conter no mínimo 8 caractéres e sem espaços\n");
@@ -58,14 +61,14 @@ public class LoginController {
         if (nome.isEmpty() || senha.isEmpty() || nome.contains(" ") || senha.contains(" ") || senha.length() < 8
                 || nome.length() < 3) {
             view.pauseComMsg("Nome de usuário indisponível.");
-            return false;
+            return null;
         }
 
         Jogador player = new Jogador(nome, senha);
         return dao.criarConta(player, view);
     }
 
-    private boolean login() throws SQLException, IOException, InterruptedException {
+    private Jogador login() throws SQLException, IOException, InterruptedException {
         view.limparTela();
         view.msg("\nNome: ");
         String nomeLogin = view.lerString();

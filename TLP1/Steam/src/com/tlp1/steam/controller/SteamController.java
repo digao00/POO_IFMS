@@ -3,6 +3,7 @@ package com.tlp1.steam.controller;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import com.tlp1.steam.model.Jogador;
 import com.tlp1.steam.model.JogadorDAO;
 import com.tlp1.steam.model.Jogo;
 import com.tlp1.steam.model.JogoDAO;
@@ -23,7 +24,8 @@ public class SteamController {
 
     public void inicio() throws IOException, InterruptedException, SQLException {
         try {
-            if (login.inicio()) {
+            Jogador jogador = login.inicio();
+            if (jogador != null) {
                 boolean io = true;
                 while (io) {
                     view.menuIniciar();

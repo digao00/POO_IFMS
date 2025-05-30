@@ -1,24 +1,25 @@
 package com.tlp1.steam.model;
 
 public class Jogador_Jogo {
-    private int id_jogador;
-    private int id_jogo;
-    
-    public Jogador_Jogo(int id_jogador, int id_jogo) {
-        this.id_jogador = id_jogador;
-        this.id_jogo = id_jogo;
+    private Jogador jogador;
+    private Jogo jogo;
+
+    public Jogador_Jogo(Jogador jogador, Jogo jogo) {
+        this.jogador = jogador;
+        this.jogo = jogo;
     }
     
-    public int getId_jogador() {
-        return id_jogador;
+    public Jogador getJogador() {
+        return jogador;
     }
-    public void setId_jogador(int id_jogador) {
-        this.id_jogador = id_jogador;
+    public void setJogador(Jogador jogador) {
+        this.jogador = jogador;
     }
-    public int getId_jogo() {
-        return id_jogo;
+    public Jogo getJogo() {
+        return jogo;
     }
-    public void setId_jogo(int id_jogo) {
-        this.id_jogo = id_jogo;
+    public void setJogo(Jogo jogo) {
+        this.jogo = jogo;
     }
+
 }
