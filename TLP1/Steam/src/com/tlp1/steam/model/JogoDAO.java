@@ -27,4 +27,20 @@ public class JogoDAO {
             }
         }
     }
+
+    public Jogo procurarJogo(String nome) {
+        try (Connection conexao = DatabaseConnection.getConnection()) {
+            String sql = "SELECT * FROM jogos WHERE nome LIKE '%"+ nome +"%'";
+            try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Jogo jogo = new Jogo(rs.getString("nome"));
+                    jogo.setId(rs.getInt("id"));
+                    return jogo;
+                }
+                else {
+                    
+                }
+            }
+        }
+    }
 }
