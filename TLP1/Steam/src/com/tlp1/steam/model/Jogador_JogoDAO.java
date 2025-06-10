@@ -17,8 +17,7 @@ public class Jogador_JogoDAO {
 
         try (Connection conexao = DatabaseConnection.getConnection()) {
 	    	String sql3 = "SELECT * FROM jogador_jogos WHERE id_jogador = ? AND id_jogo = ? ";
-	    	String sql2 = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (?, ?)";
-	    	String sql = "SELECT * FROM jogos WHERE id = ? ";
+	    	String sql = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (?, ?)";
 
 	    	try (PreparedStatement stmt3 = conexao.prepareStatement(sql3)) {
 	    		stmt3.setInt(1, jogador.getId());
@@ -28,36 +27,29 @@ public class Jogador_JogoDAO {
 	    			throw new AlreadyPurchasedGameExeption("Jogo selecionado ja está disponivel em sua biblioteca");
 	    		}
 	    	}
-	    	try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-	    		stmt.setInt(1, jogo);
-	    		ResultSet rs = stmt.executeQuery();
-	    		if (!rs.next()) {
-	    			throw new InvalidIdExeption("Erro: ID inválido");
-	    		}
-	    		int confirmation = 0;
-	    		while (confirmation == 0) {
-	    			limparTela();
-	    			System.out.printf("\nTem certeza que deseja comprar %s? (y/n)\n", rs.getString("nome"));
-	    			String resposta = scanner.nextLine();
-	    			switch (resposta) {
-	    				case "y", "Y":
-	    					confirmation = 1;
-	    					break;
-	    				case "n", "N":
-	    					return;
-	    				default:
-	    					pauseComMsg(scanner, "Digite uma opção válida.");
-	    					break;
-	    			}
-	    		}
-	    		try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
-	    			limparTela();
-	    			stmt2.setInt(1, jogo);
-	    			stmt2.setInt(2, userID);
-	    			stmt2.executeUpdate();
-	    			pauseComMsg(scanner, "Jogo adicionado à sua biblioteca.");
-	    		}
-	    	}
+	    	int confirmation = 0;
+			while (confirmation == 0) {
+				view.limparTela();
+				System.out.printf("\nTem certeza que deseja comprar %s? (y/n)\n", jogo.getNome());
+				String resposta = view.lerString();
+				switch (resposta) {
+					case "y", "Y":
+						confirmation = 1;
+						break;
+					case "n", "N":
+						return;
+					default:
+						view.pauseComMsg("Digite uma opção válida.");
+						break;
+				}
+			}
+			try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+				view.limparTela();
+				stmt.setInt(1, jogo.getId());
+				stmt.setInt(2, jogador.getId());
+				stmt.executeUpdate();
+				view.pauseComMsg("Jogo adicionado à sua biblioteca.");
+			}
 	    }
     }
 }

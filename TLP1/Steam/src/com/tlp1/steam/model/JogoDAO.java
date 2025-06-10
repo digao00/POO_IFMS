@@ -28,18 +28,17 @@ public class JogoDAO {
         }
     }
 
-    public Jogo procurarJogo(String nome) {
+    public List<Jogo> procurarJogo(String nome) throws SQLException, IOException {
+        List<Jogo> jogos = new ArrayList<>();
         try (Connection conexao = DatabaseConnection.getConnection()) {
             String sql = "SELECT * FROM jogos WHERE nome LIKE '%"+ nome +"%'";
             try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
+                while (rs.next()) {
                     Jogo jogo = new Jogo(rs.getString("nome"));
                     jogo.setId(rs.getInt("id"));
-                    return jogo;
+                    jogos.add(jogo);
                 }
-                else {
-                    
-                }
+                return jogos;
             }
         }
     }

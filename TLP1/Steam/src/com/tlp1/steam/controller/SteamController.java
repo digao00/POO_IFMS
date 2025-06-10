@@ -66,4 +66,10 @@ public class SteamController {
         view.pauseComMsg("Pressione Enter para continuar...");
     }
 
+    public void comprarJogo() throws SQLException, IOException, InterruptedException {
+        view.limparTela();
+        view.msgf("Digite o nome do jogo que queira comprar: ");
+        String jogo = view.lerString();
+        jogoDAO.procurarJogo(jogo);
+    }
 }
