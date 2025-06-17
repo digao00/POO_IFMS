@@ -49,7 +49,7 @@ public class LoginController {
         return null;
     }
 
-    public Jogador criarConta() throws SQLException, IOException, InterruptedException {
+    private Jogador criarConta() throws SQLException, IOException, InterruptedException {
         view.lerString();
         view.limparTela();
         view.msg("Usuário deve conter no mínimo 3 carácteres e sem espaço\nSenha deve conter no mínimo 8 caractéres e sem espaços\n");

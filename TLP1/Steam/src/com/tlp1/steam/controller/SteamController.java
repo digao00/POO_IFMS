@@ -2,9 +2,13 @@ package com.tlp1.steam.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.tlp1.steam.model.AlreadyPurchasedGameExeption;
 import com.tlp1.steam.model.Jogador;
 import com.tlp1.steam.model.JogadorDAO;
+import com.tlp1.steam.model.Jogador_JogoDAO;
 import com.tlp1.steam.model.Jogo;
 import com.tlp1.steam.model.JogoDAO;
 import com.tlp1.steam.view.SteamView;
@@ -13,12 +17,14 @@ public class SteamController {
     private SteamView view;
     private JogadorDAO jogadorDAO;
     private JogoDAO jogoDAO;
+    private Jogador_JogoDAO jogador_jogoDAO;
     private LoginController login;
 
-    public SteamController(SteamView view, JogadorDAO jogadorDAO, JogoDAO jogoDAO) {
+    public SteamController(SteamView view, JogadorDAO jogadorDAO, JogoDAO jogoDAO, Jogador_JogoDAO jogador_jogoDAO) {
         this.view = view;
         this.jogadorDAO = jogadorDAO;
         this.jogoDAO = jogoDAO;
+        this.jogador_jogoDAO = jogador_jogoDAO;
         this.login = new LoginController(view, jogadorDAO);
     }
 
@@ -63,13 +69,37 @@ public class SteamController {
             System.out.printf("\n%2d - %s", i, jogo.getNome());
             i++;
         }
-        view.pauseComMsg("Pressione Enter para continuar...");
+        view.pauseComMsg("");
     }
 
-    public void comprarJogo() throws SQLException, IOException, InterruptedException {
+    public void comprarJogo(Jogador jogador) throws SQLException, IOException, InterruptedException {
         view.limparTela();
         view.msgf("Digite o nome do jogo que queira comprar: ");
         String jogo = view.lerString();
-        jogoDAO.procurarJogo(jogo);
+        List<Jogo> jogos = jogoDAO.procurarJogo(jogo);
+        if (jogos.size() == 1) {
+            view.limparTela();
+            view.msgf("Tem certeza que deseja comprar %s?", jogos.get(0).getNome());
+            String confirmacao = view.lerString();
+            switch (confirmacao) {
+                case "y", "Y":
+                    try {
+                        jogador_jogoDAO.comprarJogo(jogos.get(0), view, jogador);
+                        return;
+                    } catch (AlreadyPurchasedGameExeption e) {
+                        view.pauseComMsg(e.getMessage());
+                    }
+                    break;
+            
+                case "n", "N":
+                    view.pauseComMsg("");
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        //else if jogos.size() = 0
+        //else jogos.size() > 1
     }
 }

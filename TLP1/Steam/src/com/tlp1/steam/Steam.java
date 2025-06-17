@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.tlp1.steam.controller.SteamController;
 import com.tlp1.steam.model.JogadorDAO;
+import com.tlp1.steam.model.Jogador_JogoDAO;
 import com.tlp1.steam.model.JogoDAO;
 import com.tlp1.steam.view.SteamView;
 
@@ -13,7 +14,8 @@ public class Steam {
         SteamView view = new SteamView();
 		JogadorDAO jogadorDAO = new JogadorDAO();
         JogoDAO jogoDAO = new JogoDAO();
-        SteamController controller = new SteamController(view, jogadorDAO, jogoDAO);
+        Jogador_JogoDAO jogador_jogoDAO= new Jogador_JogoDAO();
+        SteamController controller = new SteamController(view, jogadorDAO, jogoDAO, jogador_jogoDAO);
 
         try {
             controller.inicio();

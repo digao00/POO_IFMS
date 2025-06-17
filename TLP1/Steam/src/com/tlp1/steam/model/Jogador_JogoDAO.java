@@ -12,8 +12,8 @@ import com.tlp1.steam.view.SteamView;
 
 public class Jogador_JogoDAO {
 
-    private static void comprarJogo(Jogo jogo, SteamView view, Jogador jogador) 
-            throws SQLException, IOException, InterruptedException, InvalidIdExeption, AlreadyPurchasedGameExeption {
+    public void comprarJogo(Jogo jogo, SteamView view, Jogador jogador) 
+            throws SQLException, IOException, InterruptedException, AlreadyPurchasedGameExeption {
 
         try (Connection conexao = DatabaseConnection.getConnection()) {
 	    	String sql3 = "SELECT * FROM jogador_jogos WHERE id_jogador = ? AND id_jogo = ? ";
@@ -27,22 +27,7 @@ public class Jogador_JogoDAO {
 	    			throw new AlreadyPurchasedGameExeption("Jogo selecionado ja está disponivel em sua biblioteca");
 	    		}
 	    	}
-	    	int confirmation = 0;
-			while (confirmation == 0) {
-				view.limparTela();
-				System.out.printf("\nTem certeza que deseja comprar %s? (y/n)\n", jogo.getNome());
-				String resposta = view.lerString();
-				switch (resposta) {
-					case "y", "Y":
-						confirmation = 1;
-						break;
-					case "n", "N":
-						return;
-					default:
-						view.pauseComMsg("Digite uma opção válida.");
-						break;
-				}
-			}
+	    	
 			try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 				view.limparTela();
 				stmt.setInt(1, jogo.getId());
