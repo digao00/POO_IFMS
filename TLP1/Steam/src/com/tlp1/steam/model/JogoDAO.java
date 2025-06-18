@@ -14,7 +14,7 @@ import com.tlp1.steam.view.SteamView;
 public class JogoDAO {
 
     public List<Jogo> mostrarLoja(SteamView view) throws SQLException, IOException, InterruptedException {
-        ArrayList<Jogo> jogos = new ArrayList<>();
+        List<Jogo> jogos = new ArrayList<>();
         try (Connection conexao = DatabaseConnection.getConnection()) {
             String sql = "SELECT * FROM jogos ORDER BY id ASC";
             try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {

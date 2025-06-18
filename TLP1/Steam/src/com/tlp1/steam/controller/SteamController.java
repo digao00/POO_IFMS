@@ -2,7 +2,6 @@ package com.tlp1.steam.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.tlp1.steam.model.AlreadyPurchasedGameExeption;
@@ -41,14 +40,33 @@ public class SteamController {
                             mostralLoja();
                             break;
                         case 2:
-                            // comprarJogo()
+                            try {
+                                comprarJogo(jogador);
+                            }
+                            catch (AlreadyPurchasedGameExeption e) {
+                                view.pauseComMsg(e.getMessage());
+                            }
                             break;
                         case 3:
                             // mostrarBiblioteca()
                             break;
                         case 4:
-                            // personalizar
-                            break;
+                            boolean mudou = false;
+                            while (mudou = false) {
+                                view.menuPersonalizar();
+                                int op2 = view.lerInt();
+                                switch (op2) {
+                                    case 1:
+                                        //mudarNome();
+                                        break;
+                                    case 2:
+                                        //mudarSenha();
+                                        break;
+                                    default:
+                                        view.pauseComMsg("Digite uma opção válida.");
+                                        break;
+                                }
+                            }
                         case 0:
                             view.limparTela();
                             view.msg("Saindo...");
@@ -72,34 +90,64 @@ public class SteamController {
         view.pauseComMsg("");
     }
 
-    public void comprarJogo(Jogador jogador) throws SQLException, IOException, InterruptedException {
+    public void comprarJogo(Jogador jogador) throws SQLException, IOException, InterruptedException, AlreadyPurchasedGameExeption {
         view.limparTela();
-        view.msgf("Digite o nome do jogo que queira comprar: ");
+        view.msgf("Digite o nome do jogo que queira comprar (0 para voltar): ");
         String jogo = view.lerString();
+        if (jogo == "0") {
+            return;
+        }
         List<Jogo> jogos = jogoDAO.procurarJogo(jogo);
-        if (jogos.size() == 1) {
-            view.limparTela();
-            view.msgf("Tem certeza que deseja comprar %s?", jogos.get(0).getNome());
-            String confirmacao = view.lerString();
-            switch (confirmacao) {
-                case "y", "Y":
-                    try {
+        boolean io = true;
+        while (io) {
+            if (jogos.size() == 1) {
+                view.limparTela();
+                view.msgf("Tem certeza que deseja comprar %s?", jogos.get(0).getNome());
+                String confirmacao = view.lerString();
+                switch (confirmacao) {
+                    case "y", "Y":
                         jogador_jogoDAO.comprarJogo(jogos.get(0), view, jogador);
+                        io = false;
                         return;
-                    } catch (AlreadyPurchasedGameExeption e) {
-                        view.pauseComMsg(e.getMessage());
-                    }
-                    break;
-            
-                case "n", "N":
-                    view.pauseComMsg("");
-                    break;
+                
+                    case "n", "N":
+                        view.pauseComMsg("");
+                        break;
 
-                default:
-                    break;
+                    default:
+                        view.pauseComMsg("Digite uma opção válida.");
+                        break;
+                }
+            }
+            else if (jogos.size() > 1) {
+                view.limparTela();
+                for(int i = 0; i < jogos.size(); i++) {
+                    view.msgf("\n%d - %s", i+1, jogos.get(i).getNome());
+                }
+                view.msgf("\nDigite o número ao lado do jogo que queira comprar: ");
+                int j = view.lerInt();
+                view.limparTela();
+                view.msgf("Tem certeza que deseja comprar %s?", jogos.get(j-1).getNome());
+                String confirmacao = view.lerString();
+                switch (confirmacao) {
+                    case "y", "Y":
+                        jogador_jogoDAO.comprarJogo(jogos.get(j-1), view, jogador);
+                        return;
+                
+                    case "n", "N":
+                        view.pauseComMsg("");
+                        return;
+
+                    default:
+                        view.pauseComMsg("Digite uma opção válida.");
+                        break;
+                }
+            }
+            else {
+                view.pauseComMsg("Jogo não encontrado");
+                io = false;
+                return;
             }
         }
-        //else if jogos.size() = 0
-        //else jogos.size() > 1
     }
 }

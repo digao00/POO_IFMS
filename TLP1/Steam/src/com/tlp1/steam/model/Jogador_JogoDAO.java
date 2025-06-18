@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Scanner;
 
 import com.tlp1.steam.util.DatabaseConnection;
 import com.tlp1.steam.view.SteamView;
@@ -29,7 +28,6 @@ public class Jogador_JogoDAO {
 	    	}
 	    	
 			try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-				view.limparTela();
 				stmt.setInt(1, jogo.getId());
 				stmt.setInt(2, jogador.getId());
 				stmt.executeUpdate();
