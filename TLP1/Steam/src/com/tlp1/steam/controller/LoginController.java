@@ -22,6 +22,7 @@ public class LoginController {
             while (io) {
                 view.menuLogin();
                 int op = view.lerInt();
+                view.lerString();
 
                 Jogador jogador = null;
                 switch (op) {

@@ -52,15 +52,21 @@ public class SteamController {
                             break;
                         case 4:
                             boolean mudou = false;
-                            while (mudou = false) {
+                            while (!mudou) {
                                 view.menuPersonalizar();
                                 int op2 = view.lerInt();
                                 switch (op2) {
                                     case 1:
-                                        //mudarNome();
+                                        //mudarSenha();
                                         break;
                                     case 2:
-                                        //mudarSenha();
+                                        //mudarNome();
+                                        break;
+                                    case 3:
+                                        if (deletarConta(jogador)) {
+                                            io = false;
+                                            mudou = true;
+                                        }
                                         break;
                                     default:
                                         view.pauseComMsg("Digite uma opção válida.");
@@ -150,4 +156,32 @@ public class SteamController {
             }
         }
     }
+
+    public boolean deletarConta(Jogador jogador) throws SQLException, IOException, InterruptedException{
+        while (true) {
+			view.msg("Você tem certeza que quer deletar sua conta? (y/n)");
+			String resposta = view.lerString();
+			switch (resposta) {
+				case "y", "Y":
+                    view.limparTela();
+                    view.msgf("Digite sua senha: ");
+                    String senha = view.lerString();
+                    if (senha == jogador.getSenha()) {
+                        jogadorDAO.deletarConta(jogador, view);
+                        return true;
+                    }
+                    else {
+                        view.pauseComMsg("Senha incorreta.");
+                        return false;
+                    }
+				case "n", "N":
+					return false;
+				default:
+					view.pauseComMsg("Digite uma opção válida");
+					break;
+			}
+		}
+
+    }
+
 }

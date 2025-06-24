@@ -35,6 +35,7 @@ public class SteamView {
         System.out.println("0 - Voltar");
         System.out.println("1 - Mudar nome de usuário");
         System.out.println("2 - Mudar senha");
+        System.out.println("3 - Deletar conta");
         System.out.printf("\n->");
     }
 

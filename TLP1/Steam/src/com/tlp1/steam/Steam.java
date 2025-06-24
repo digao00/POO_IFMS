@@ -14,7 +14,7 @@ public class Steam {
         SteamView view = new SteamView();
 		JogadorDAO jogadorDAO = new JogadorDAO();
         JogoDAO jogoDAO = new JogoDAO();
-        Jogador_JogoDAO jogador_jogoDAO= new Jogador_JogoDAO();
+        Jogador_JogoDAO jogador_jogoDAO = new Jogador_JogoDAO();
         SteamController controller = new SteamController(view, jogadorDAO, jogoDAO, jogador_jogoDAO);
 
         try {

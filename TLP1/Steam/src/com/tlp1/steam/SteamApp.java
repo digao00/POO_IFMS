@@ -122,7 +122,8 @@ public class SteamApp {
 							while (confirmation == 0) {
 								try {
 									System.out.println("1 - Mudar senha");
-									System.out.println("2 - Excluir conta");
+									System.out.println("2 - Mudar nome");
+									System.out.println("3 - Excluir conta");
 									System.out.println("0 - Voltar");
 									System.out.printf("-> ");
 									opcao = scanner.nextInt();
