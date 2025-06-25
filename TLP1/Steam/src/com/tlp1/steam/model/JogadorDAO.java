@@ -60,16 +60,49 @@ public class JogadorDAO {
         }
     }
 
-    public void deletarConta(Jogador player, SteamView view) throws SQLException, IOException, InterruptedException {
+    public void deletarConta(Jogador player) throws SQLException {
         try (Connection conexao = DatabaseConnection.getConnection()) {
             String sql = "DELETE FROM jogador_jogos WHERE id_jogador = ?; DELETE FROM jogador WHERE id = ? ";
             try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
                 stmt.setInt(1, player.getId());
                 stmt.setInt(2, player.getId());
                 stmt.executeUpdate();
-                view.pauseComMsg("Conta deletada.");
             }
         }
 	}
+
+    public void mudarSenha(Jogador jogador, String novaSenha) throws SQLException {
+        try (Connection conexao = DatabaseConnection.getConnection()) {
+            String sql = "UPDATE jogador SET senha = '?' WHERE id = ?";
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setString(1, novaSenha);
+                stmt.setInt(2, jogador.getId());
+                stmt.executeUpdate();
+            }
+        }
+    }
+
+    public boolean mudarNome(Jogador jogador, String novoNome, SteamView view) throws SQLException, IOException, InterruptedException {
+        try (Connection conexao = DatabaseConnection.getConnection()) {
+            String sql = "UPDATE jogador SET nome = '?' WHERE id = ?";
+            String sql2 = "SELECT * FROM jogador WHERE nome = ? ";
+            try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
+                stmt2.setString(1, novoNome);
+                ResultSet rs = stmt2.executeQuery();
+                if (rs.next()) {
+                    view.pauseComMsg("Nome de usuário indisponível.");
+                    return false;
+                }
+                else {
+                    try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                    stmt.setString(1, novoNome);
+                    stmt.setInt(2, jogador.getId());
+                    stmt.executeUpdate();
+                    return true;
+                    }
+                }
+            }
+        }
+    }
 
 }

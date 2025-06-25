@@ -35,6 +35,7 @@ public class SteamController {
                 while (io) {
                     view.menuIniciar();
                     int op = view.lerInt();
+                    view.lerString();
                     switch (op) {
                         case 1:
                             mostralLoja();
@@ -55,15 +56,23 @@ public class SteamController {
                             while (!mudou) {
                                 view.menuPersonalizar();
                                 int op2 = view.lerInt();
+                                view.lerString();
                                 switch (op2) {
                                     case 1:
-                                        //mudarSenha();
+                                        if (mudarSenha(jogador)) {
+                                            view.pauseComMsg("Senha alterada.");
+                                            mudou = true;
+                                        }
                                         break;
                                     case 2:
-                                        //mudarNome();
+                                        if (mudarNome(jogador)) {
+                                            view.pauseComMsg("Nome de usuário alterado");
+                                            mudou = true;
+                                        }
                                         break;
                                     case 3:
                                         if (deletarConta(jogador)) {
+                                            view.pauseComMsg("Conta deletada.");
                                             io = false;
                                             mudou = true;
                                         }
@@ -73,6 +82,7 @@ public class SteamController {
                                         break;
                                 }
                             }
+                            break;
                         case 0:
                             view.limparTela();
                             view.msg("Saindo...");
@@ -88,12 +98,13 @@ public class SteamController {
     }
 
     public void mostralLoja() throws SQLException, IOException, InterruptedException {
-        for (Jogo jogo : jogoDAO.mostrarLoja(view)) {
+        view.limparTela();
+        for (Jogo jogo : jogoDAO.mostrarLoja()) {
             int i = 1;
-            System.out.printf("\n%2d - %s", i, jogo.getNome());
+            view.msgf("\n%2d - %s", i, jogo.getNome());
             i++;
         }
-        view.pauseComMsg("");
+        view.lerString();
     }
 
     public void comprarJogo(Jogador jogador) throws SQLException, IOException, InterruptedException, AlreadyPurchasedGameExeption {
@@ -112,7 +123,8 @@ public class SteamController {
                 String confirmacao = view.lerString();
                 switch (confirmacao) {
                     case "y", "Y":
-                        jogador_jogoDAO.comprarJogo(jogos.get(0), view, jogador);
+                        jogador_jogoDAO.comprarJogo(jogos.get(0), jogador);
+                        view.pauseComMsg("Jogo adicionado à sua biblioteca.");
                         io = false;
                         return;
                 
@@ -132,12 +144,13 @@ public class SteamController {
                 }
                 view.msgf("\nDigite o número ao lado do jogo que queira comprar: ");
                 int j = view.lerInt();
+                view.lerString();
                 view.limparTela();
                 view.msgf("Tem certeza que deseja comprar %s?", jogos.get(j-1).getNome());
                 String confirmacao = view.lerString();
                 switch (confirmacao) {
                     case "y", "Y":
-                        jogador_jogoDAO.comprarJogo(jogos.get(j-1), view, jogador);
+                        jogador_jogoDAO.comprarJogo(jogos.get(j-1), jogador);
                         return;
                 
                     case "n", "N":
@@ -157,8 +170,9 @@ public class SteamController {
         }
     }
 
-    public boolean deletarConta(Jogador jogador) throws SQLException, IOException, InterruptedException{
+    public boolean deletarConta(Jogador jogador) throws SQLException, IOException, InterruptedException {
         while (true) {
+            view.limparTela();
 			view.msg("Você tem certeza que quer deletar sua conta? (y/n)");
 			String resposta = view.lerString();
 			switch (resposta) {
@@ -167,7 +181,7 @@ public class SteamController {
                     view.msgf("Digite sua senha: ");
                     String senha = view.lerString();
                     if (senha == jogador.getSenha()) {
-                        jogadorDAO.deletarConta(jogador, view);
+                        jogadorDAO.deletarConta(jogador);
                         return true;
                     }
                     else {
@@ -181,7 +195,62 @@ public class SteamController {
 					break;
 			}
 		}
+    }
 
+    public boolean mudarSenha(Jogador jogador) throws SQLException, IOException, InterruptedException {
+        view.limparTela();
+        view.msgf("Digite sua senha: ");
+        String senha = view.lerString();
+        view.limparTela();
+        if (senha == jogador.getSenha()) {
+            view.msg("Senha deve conter no mínimo 8 caractéres e sem espaços\n");
+            view.msgf("Digite a nova senha: ");
+            String novaSenha = view.lerString();
+            if (senha.isEmpty() || senha.contains(" ") || senha.length() < 8) {
+                view.pauseComMsg("Senha inválida");
+                return false;
+            }
+            else {
+                jogadorDAO.mudarSenha(jogador, novaSenha);
+                return true;
+            }
+        }
+        else {
+            view.pauseComMsg("Senha incorreta.");
+            return false;
+        }
+    }
+
+    public boolean mudarNome(Jogador jogador) throws SQLException, IOException, InterruptedException {
+        view.limparTela();
+        view.msgf("Digite sua senha: ");
+        String senha = view.lerString();
+        view.limparTela();
+        if (senha == jogador.getSenha()) {
+            view.msg("Usuário deve conter no mínimo 3 carácteres e sem espaço\n");
+            view.msgf("Digite o novo nome de usuário: ");
+            String novoNome = view.lerString();
+            if (novoNome.isEmpty() || novoNome.contains(" ") || novoNome.length() < 3) {
+                view.pauseComMsg("Nome de usuário indisponível");
+                return false;
+            }
+            else {
+                return jogadorDAO.mudarNome(jogador, novoNome, view);
+            }
+        }
+        else {
+            view.pauseComMsg("Senha incorreta.");
+            return false;
+        }
+    }
+
+    public void mostrarBiblioteca(Jogador jogador) throws SQLException, IOException, InterruptedException {
+        for (Jogo jogo : jogador_jogoDAO.mostrarBiblioteca(jogador)) {
+            int i = 1;
+            view.msgf("\n%2d - %s", i, jogo.getNome());
+            i++;
+        }
+        view.lerString();
     }
 
 }

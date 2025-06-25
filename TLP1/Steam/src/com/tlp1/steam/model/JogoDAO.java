@@ -1,6 +1,5 @@
 package com.tlp1.steam.model;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,11 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.tlp1.steam.util.DatabaseConnection;
-import com.tlp1.steam.view.SteamView;
 
 public class JogoDAO {
 
-    public List<Jogo> mostrarLoja(SteamView view) throws SQLException, IOException, InterruptedException {
+    public List<Jogo> mostrarLoja() throws SQLException {
         List<Jogo> jogos = new ArrayList<>();
         try (Connection conexao = DatabaseConnection.getConnection()) {
             String sql = "SELECT * FROM jogos ORDER BY id ASC";
@@ -28,7 +26,7 @@ public class JogoDAO {
         }
     }
 
-    public List<Jogo> procurarJogo(String nome) throws SQLException, IOException {
+    public List<Jogo> procurarJogo(String nome) throws SQLException {
         ArrayList<Jogo> jogos = new ArrayList<>();
         try (Connection conexao = DatabaseConnection.getConnection()) {
             String sql = "SELECT * FROM jogos WHERE nome LIKE '%"+ nome +"%'";
