@@ -22,8 +22,7 @@ public class LoginController {
             while (io) {
                 view.menuLogin();
                 int op = view.lerInt();
-                view.lerString();
-
+                
                 Jogador jogador = null;
                 switch (op) {
                     case 1:
@@ -34,6 +33,7 @@ public class LoginController {
                         }
                         break;
                     case 2:
+                        view.lerString();
                         jogador = login();
                         if (jogador != null) {
                             io = false;

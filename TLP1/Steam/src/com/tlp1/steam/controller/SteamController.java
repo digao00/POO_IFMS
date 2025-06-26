@@ -49,7 +49,7 @@ public class SteamController {
                             }
                             break;
                         case 3:
-                            // mostrarBiblioteca()
+                            mostrarBiblioteca(jogador);
                             break;
                         case 4:
                             boolean mudou = false;
@@ -77,6 +77,9 @@ public class SteamController {
                                             mudou = true;
                                         }
                                         break;
+                                    case 0:
+                                        mudou = true;
+                                        break;
                                     default:
                                         view.pauseComMsg("Digite uma opção válida.");
                                         break;
@@ -99,11 +102,12 @@ public class SteamController {
 
     public void mostralLoja() throws SQLException, IOException, InterruptedException {
         view.limparTela();
+        int i = 1;
         for (Jogo jogo : jogoDAO.mostrarLoja()) {
-            int i = 1;
             view.msgf("\n%2d - %s", i, jogo.getNome());
             i++;
         }
+        view.msg("\nPressione enter para continuar.");
         view.lerString();
     }
 
@@ -202,11 +206,11 @@ public class SteamController {
         view.msgf("Digite sua senha: ");
         String senha = view.lerString();
         view.limparTela();
-        if (senha == jogador.getSenha()) {
+        if (senha.equals(jogador.getSenha())) {
             view.msg("Senha deve conter no mínimo 8 caractéres e sem espaços\n");
             view.msgf("Digite a nova senha: ");
             String novaSenha = view.lerString();
-            if (senha.isEmpty() || senha.contains(" ") || senha.length() < 8) {
+            if (novaSenha.isEmpty() || novaSenha.contains(" ") || novaSenha.length() < 8) {
                 view.pauseComMsg("Senha inválida");
                 return false;
             }
@@ -226,7 +230,7 @@ public class SteamController {
         view.msgf("Digite sua senha: ");
         String senha = view.lerString();
         view.limparTela();
-        if (senha == jogador.getSenha()) {
+        if (senha.equals(jogador.getSenha())) {
             view.msg("Usuário deve conter no mínimo 3 carácteres e sem espaço\n");
             view.msgf("Digite o novo nome de usuário: ");
             String novoNome = view.lerString();
@@ -245,11 +249,13 @@ public class SteamController {
     }
 
     public void mostrarBiblioteca(Jogador jogador) throws SQLException, IOException, InterruptedException {
+        view.limparTela();
+        int i = 1;
         for (Jogo jogo : jogador_jogoDAO.mostrarBiblioteca(jogador)) {
-            int i = 1;
             view.msgf("\n%2d - %s", i, jogo.getNome());
             i++;
         }
+        view.msg("\nPressione Enter para continuar.");
         view.lerString();
     }
 

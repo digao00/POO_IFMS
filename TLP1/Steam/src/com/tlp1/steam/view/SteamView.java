@@ -33,10 +33,10 @@ public class SteamView {
     public void menuPersonalizar() throws IOException, InterruptedException {
         limparTela();
         System.out.println("0 - Voltar");
-        System.out.println("1 - Mudar nome de usuário");
-        System.out.println("2 - Mudar senha");
+        System.out.println("1 - Mudar senha");
+        System.out.println("2 - Mudar nome de usuário");
         System.out.println("3 - Deletar conta");
-        System.out.printf("\n->");
+        System.out.printf("\n-> ");
     }
 
     public void msg(String msg) {

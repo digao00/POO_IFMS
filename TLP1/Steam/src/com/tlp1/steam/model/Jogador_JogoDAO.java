@@ -36,13 +36,13 @@ public class Jogador_JogoDAO {
 	public List<Jogo> mostrarBiblioteca(Jogador jogador) throws SQLException {
 		ArrayList<Jogo> jogos = new ArrayList<>();
 		try (Connection conexao = DatabaseConnection.getConnection()) {
-			String sql = "SELECT * FROM public.jogos, public.jogador_jogos WHERE jogador_jogos.id_jogador = ? AND jogos.id = jogador_jogos.id_jogo";
+			String sql = "SELECT jogos.id AS jogo_id, jogos.nome AS jogo_nome, jogador_jogos.id_jogo, jogador_jogos.id_jogador FROM public.jogos, public.jogador_jogos WHERE jogador_jogos.id_jogador = ? AND jogos.id = jogador_jogos.id_jogo";
 			try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 				stmt.setInt(1, jogador.getId());
 				ResultSet rs = stmt.executeQuery();
 				while (rs.next()) {
-					Jogo jogo = new Jogo(rs.getString("jogos.nome"));
-					jogo.setId(rs.getInt("jogos.id"));
+					Jogo jogo = new Jogo(rs.getString("jogo_nome"));
+					jogo.setId(rs.getInt("jogo_id"));
 					jogos.add(jogo);
 				}
 				return jogos;

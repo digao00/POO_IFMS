@@ -12,7 +12,7 @@ import com.tlp1.steam.util.DatabaseConnection;
 public class JogoDAO {
 
     public List<Jogo> mostrarLoja() throws SQLException {
-        List<Jogo> jogos = new ArrayList<>();
+        ArrayList<Jogo> jogos = new ArrayList<>();
         try (Connection conexao = DatabaseConnection.getConnection()) {
             String sql = "SELECT * FROM jogos ORDER BY id ASC";
             try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {

@@ -73,7 +73,7 @@ public class JogadorDAO {
 
     public void mudarSenha(Jogador jogador, String novaSenha) throws SQLException {
         try (Connection conexao = DatabaseConnection.getConnection()) {
-            String sql = "UPDATE jogador SET senha = '?' WHERE id = ?";
+            String sql = "UPDATE jogador SET senha = '" + novaSenha + "' WHERE id = ?";
             try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
                 stmt.setString(1, novaSenha);
                 stmt.setInt(2, jogador.getId());
@@ -84,7 +84,7 @@ public class JogadorDAO {
 
     public boolean mudarNome(Jogador jogador, String novoNome, SteamView view) throws SQLException, IOException, InterruptedException {
         try (Connection conexao = DatabaseConnection.getConnection()) {
-            String sql = "UPDATE jogador SET nome = '?' WHERE id = ?";
+            String sql = "UPDATE jogador SET nome = '" + novoNome + "' WHERE id = ?";
             String sql2 = "SELECT * FROM jogador WHERE nome = ? ";
             try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
                 stmt2.setString(1, novoNome);
@@ -95,8 +95,7 @@ public class JogadorDAO {
                 }
                 else {
                     try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-                    stmt.setString(1, novoNome);
-                    stmt.setInt(2, jogador.getId());
+                    stmt.setInt(1, jogador.getId());
                     stmt.executeUpdate();
                     return true;
                     }
