@@ -41,6 +41,7 @@ public class LoginController {
                         }
                         break;
                     default:
+                        view.lerString();
                         view.pauseComMsg("Digite uma opção válida.");
                         break;
                 }

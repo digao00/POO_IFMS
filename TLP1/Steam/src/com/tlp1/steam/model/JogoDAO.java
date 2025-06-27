@@ -29,6 +29,7 @@ public class JogoDAO {
     public List<Jogo> procurarJogo(String nome) throws SQLException {
         ArrayList<Jogo> jogos = new ArrayList<>();
         try (Connection conexao = DatabaseConnection.getConnection()) {
+            // SELECT * FROM jogos WHERE LOWER(nome) LIKE LOWER('%"+ nome +"%')
             String sql = "SELECT * FROM jogos WHERE nome LIKE '%"+ nome +"%'";
             try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {

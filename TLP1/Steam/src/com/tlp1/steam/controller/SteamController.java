@@ -56,7 +56,6 @@ public class SteamController {
                             while (!mudou) {
                                 view.menuPersonalizar();
                                 int op2 = view.lerInt();
-                                view.lerString();
                                 switch (op2) {
                                     case 1:
                                         if (mudarSenha(jogador)) {
@@ -115,15 +114,20 @@ public class SteamController {
         view.limparTela();
         view.msgf("Digite o nome do jogo que queira comprar (0 para voltar): ");
         String jogo = view.lerString();
-        if (jogo == "0") {
+        if (jogo.equals("0") || jogo.isEmpty()) {
             return;
         }
+        char primeiraLetra = jogo.charAt(0);
+        if (Character.isLowerCase(primeiraLetra)) {
+            jogo = Character.toUpperCase(primeiraLetra) + jogo.substring(1);
+        }
+        view.msg(jogo);
         List<Jogo> jogos = jogoDAO.procurarJogo(jogo);
         boolean io = true;
         while (io) {
             if (jogos.size() == 1) {
                 view.limparTela();
-                view.msgf("Tem certeza que deseja comprar %s?", jogos.get(0).getNome());
+                view.msgf("Tem certeza que deseja comprar %s? (Y/N)\n", jogos.get(0).getNome());
                 String confirmacao = view.lerString();
                 switch (confirmacao) {
                     case "y", "Y":
@@ -134,6 +138,7 @@ public class SteamController {
                 
                     case "n", "N":
                         view.pauseComMsg("");
+                        io = false;
                         break;
 
                     default:
