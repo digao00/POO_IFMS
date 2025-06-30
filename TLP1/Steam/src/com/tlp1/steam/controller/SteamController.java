@@ -13,7 +13,7 @@ import com.tlp1.steam.model.JogoDAO;
 import com.tlp1.steam.view.SteamView;
 
 public class SteamController {
-    private SteamView view;
+    private SteamView   view;
     private JogadorDAO jogadorDAO;
     private JogoDAO jogoDAO;
     private Jogador_JogoDAO jogador_jogoDAO;
@@ -56,6 +56,7 @@ public class SteamController {
                             while (!mudou) {
                                 view.menuPersonalizar();
                                 int op2 = view.lerInt();
+                                view.lerString();
                                 switch (op2) {
                                     case 1:
                                         if (mudarSenha(jogador)) {
@@ -127,7 +128,7 @@ public class SteamController {
         while (io) {
             if (jogos.size() == 1) {
                 view.limparTela();
-                view.msgf("Tem certeza que deseja comprar %s? (Y/N)\n", jogos.get(0).getNome());
+                view.msgf("Tem certeza que deseja comprar %s? (Y/N)\n-> ", jogos.get(0).getNome());
                 String confirmacao = view.lerString();
                 switch (confirmacao) {
                     case "y", "Y":
@@ -147,28 +148,34 @@ public class SteamController {
                 }
             }
             else if (jogos.size() > 1) {
-                view.limparTela();
-                for(int i = 0; i < jogos.size(); i++) {
-                    view.msgf("\n%d - %s", i+1, jogos.get(i).getNome());
-                }
-                view.msgf("\nDigite o número ao lado do jogo que queira comprar: ");
-                int j = view.lerInt();
-                view.lerString();
-                view.limparTela();
-                view.msgf("Tem certeza que deseja comprar %s?", jogos.get(j-1).getNome());
-                String confirmacao = view.lerString();
-                switch (confirmacao) {
-                    case "y", "Y":
-                        jogador_jogoDAO.comprarJogo(jogos.get(j-1), jogador);
-                        return;
-                
-                    case "n", "N":
-                        view.pauseComMsg("");
-                        return;
-
-                    default:
-                        view.pauseComMsg("Digite uma opção válida.");
-                        break;
+                try {
+                    view.limparTela();
+                    for(int i = 0; i < jogos.size(); i++) {
+                        view.msgf("\n%d - %s", i+1, jogos.get(i).getNome());
+                    }
+                    view.msgf("\nDigite o número ao lado do jogo que queira comprar: ");
+                    int j = view.lerInt();
+                    view.lerString();
+                    view.limparTela();
+                    view.msgf("Tem certeza que deseja comprar %s? (Y/N)\n-> ", jogos.get(j-1).getNome());
+                    String confirmacao = view.lerString();
+                    switch (confirmacao) {
+                        case "y", "Y":
+                            jogador_jogoDAO.comprarJogo(jogos.get(j-1), jogador);
+                            view.pauseComMsg("Jogo adicionado à sua biblioteca.");
+                            return;
+                        
+                        case "n", "N":
+                            view.lerString();
+                            view.pauseComMsg("");
+                            return;
+                        
+                        default:
+                            view.pauseComMsg("Digite uma opção válida.");
+                            break;
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    view.pauseComMsg("Selecione uma opção válida.");
                 }
             }
             else {
@@ -182,14 +189,14 @@ public class SteamController {
     public boolean deletarConta(Jogador jogador) throws SQLException, IOException, InterruptedException {
         while (true) {
             view.limparTela();
-			view.msg("Você tem certeza que quer deletar sua conta? (y/n)");
+			view.msgf("Você tem certeza que quer deletar sua conta? (y/n)\n-> ");
 			String resposta = view.lerString();
 			switch (resposta) {
 				case "y", "Y":
                     view.limparTela();
                     view.msgf("Digite sua senha: ");
                     String senha = view.lerString();
-                    if (senha == jogador.getSenha()) {
+                    if (senha.equals(jogador.getSenha())) {
                         jogadorDAO.deletarConta(jogador);
                         return true;
                     }
