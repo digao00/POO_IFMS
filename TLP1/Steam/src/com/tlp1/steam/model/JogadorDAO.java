@@ -60,16 +60,6 @@ public class JogadorDAO {
         }
     }
 
-    public void deletarConta(Jogador jogador) throws SQLException {
-        try (Connection conexao = DatabaseConnection.getConnection()) {
-            String sql = "DELETE FROM jogador_jogos WHERE id_jogador = ?; DELETE FROM jogador WHERE id = ? ";
-            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-                stmt.setInt(1, jogador.getId());
-                stmt.setInt(2, jogador.getId());
-                stmt.executeUpdate();
-            }
-        }
-	}
 
     public void mudarSenha(Jogador jogador, String novaSenha) throws SQLException {
         try (Connection conexao = DatabaseConnection.getConnection()) {

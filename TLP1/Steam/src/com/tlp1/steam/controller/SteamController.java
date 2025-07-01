@@ -2,6 +2,7 @@ package com.tlp1.steam.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.tlp1.steam.model.AlreadyPurchasedGameExeption;
@@ -118,11 +119,6 @@ public class SteamController {
         if (jogo.equals("0") || jogo.isEmpty()) {
             return;
         }
-        char primeiraLetra = jogo.charAt(0);
-        if (Character.isLowerCase(primeiraLetra)) {
-            jogo = Character.toUpperCase(primeiraLetra) + jogo.substring(1);
-        }
-        view.msg(jogo);
         List<Jogo> jogos = jogoDAO.procurarJogo(jogo);
         boolean io = true;
         while (io) {
@@ -153,9 +149,12 @@ public class SteamController {
                     for(int i = 0; i < jogos.size(); i++) {
                         view.msgf("\n%d - %s", i+1, jogos.get(i).getNome());
                     }
-                    view.msgf("\nDigite o número ao lado do jogo que queira comprar: ");
+                    view.msgf("\nDigite o número ao lado do jogo que queira comprar (0 para voltar): ");
                     int j = view.lerInt();
                     view.lerString();
+                    if (j == 0) {
+                        return;
+                    }
                     view.limparTela();
                     view.msgf("Tem certeza que deseja comprar %s? (Y/N)\n-> ", jogos.get(j-1).getNome());
                     String confirmacao = view.lerString();
@@ -197,7 +196,7 @@ public class SteamController {
                     view.msgf("Digite sua senha: ");
                     String senha = view.lerString();
                     if (senha.equals(jogador.getSenha())) {
-                        jogadorDAO.deletarConta(jogador);
+                        jogador_jogoDAO.deletarConta(jogador);
                         return true;
                     }
                     else {
@@ -261,14 +260,51 @@ public class SteamController {
     }
 
     public void mostrarBiblioteca(Jogador jogador) throws SQLException, IOException, InterruptedException {
-        view.limparTela();
-        int i = 1;
-        for (Jogo jogo : jogador_jogoDAO.mostrarBiblioteca(jogador)) {
-            view.msgf("\n%2d - %s", i, jogo.getNome());
-            i++;
+        boolean io = true;
+        while (io) {
+            view.limparTela();
+            int i = 1;
+            ArrayList<Jogo> jogos = jogador_jogoDAO.mostrarBiblioteca(jogador);
+            if (jogos.size() == 0) {
+                view.pauseComMsg("Você não tem nenhum jogo na sua biblioteca.");
+                return;
+            }
+            for (Jogo jogo : jogos) {
+                view.msgf("\n%2d - %s", i, jogo.getNome());
+                i++;
+            }
+            view.msg("\nSelecione o jogo para ver ações (0 para voltar)\n");
+            view.msgf("-> ");
+            int j = view.lerInt();
+            view.lerString();
+            if (j == 0) {
+                io = true;
+                return;
+            }
+            view.limparTela();
+
+            while (true) {
+                try {
+                    view.menuJogo(jogos.get(j-1));
+                    int op = view.lerInt();
+                    view.lerString();
+                    switch (op) {
+                        case 0:
+                            break;
+                        case 1:
+                            jogador_jogoDAO.reembolsarJogo(jogador, jogos.get(j-1));
+                            view.pauseComMsg("Jogo reembolsado.");
+                            return;
+                        default:
+                            view.pauseComMsg("Selecione uma opção válida.");
+                            break;
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    view.pauseComMsg("Selecione uma opção válida.");
+                    break;
+                }
+            }
         }
-        view.msg("\nPressione Enter para continuar.");
-        view.lerString();
     }
 
 }

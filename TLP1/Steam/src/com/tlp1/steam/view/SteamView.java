@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import com.tlp1.steam.model.Jogo;
+
 public class SteamView {
     private Scanner scanner;
     
@@ -39,6 +41,14 @@ public class SteamView {
         System.out.printf("\n-> ");
     }
 
+    public void menuJogo(Jogo jogo) throws IOException, InterruptedException {
+        limparTela();
+        System.out.println(jogo.getNome());
+        System.out.println("0 - Voltar");
+        System.out.println("1 - Reembolsar");
+        System.out.printf("\n-> ");
+    }
+
     public void msg(String msg) {
         System.out.printf(msg);
     }
@@ -51,7 +61,7 @@ public class SteamView {
         try {
             return scanner.nextInt();
         } catch (InputMismatchException e) {
-            pauseComMsg("Digite uma opção válida.");
+            //pauseComMsg("Digite uma opção válida.");
             return -1;
         }
     }
