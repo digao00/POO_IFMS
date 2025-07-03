@@ -23,12 +23,13 @@ public class SteamView {
 
     public void menuIniciar() throws IOException, InterruptedException {
         limparTela();
-        System.out.println("\nEscolha uma opção:");
-        System.out.println("1 - Mostrar Loja");
-        System.out.println("2 - Comprar jogo");
-        System.out.println("3 - Sua biblioteca");
-        System.out.println("4 - Personalizar");
-        System.out.println("0 - Sair");
+        System.out.println("\n\t###### Steam ######");
+        System.out.println("\n\tEscolha uma opção:\n");
+        System.out.println("|\t1 - Mostrar Loja\t|");
+        System.out.println("|\t2 - Comprar jogo\t|");
+        System.out.println("|\t3 - Sua biblioteca\t|");
+        System.out.println("|\t4 - Personalizar\t|");
+        System.out.println("|\t0 - Sair\t\t|");
         System.out.printf("\n-> ");
     }
 

@@ -10,14 +10,14 @@ import com.tlp1.steam.util.DatabaseConnection;
 
 public class Jogador_JogoDAO {
 
-	public void comprarJogo(Jogo jogo, Jogador jogador) throws SQLException, AlreadyPurchasedGameExeption {
+	public void comprarJogo(Jogador_Jogo jj) throws SQLException, AlreadyPurchasedGameExeption {
 		try (Connection conexao = DatabaseConnection.getConnection()) {
 			String sql3 = "SELECT * FROM jogador_jogos WHERE id_jogador = ? AND id_jogo = ? ";
 			String sql = "INSERT INTO jogador_jogos (id_jogo, id_jogador) VALUES (?, ?)";
 
 			try (PreparedStatement stmt3 = conexao.prepareStatement(sql3)) {
-				stmt3.setInt(1, jogador.getId());
-				stmt3.setInt(2, jogo.getId());
+				stmt3.setInt(1, jj.getJogador().getId());
+				stmt3.setInt(2, jj.getJogo().getId());
 				ResultSet rs2 = stmt3.executeQuery();
 
 				if (rs2.next()) {
@@ -25,8 +25,8 @@ public class Jogador_JogoDAO {
 				}
 			}
 			try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-				stmt.setInt(1, jogo.getId());
-				stmt.setInt(2, jogador.getId());
+				stmt.setInt(1, jj.getJogo().getId());
+				stmt.setInt(2, jj.getJogador().getId());
 				stmt.executeUpdate();
 			}
 		}
@@ -64,13 +64,13 @@ public class Jogador_JogoDAO {
 		}
 	}
 
-	public void reembolsarJogo(Jogador jogador, Jogo jogo) throws SQLException {
+	public void reembolsarJogo(Jogador_Jogo jj) throws SQLException {
 		String sql = "DELETE FROM jogador_jogos WHERE id_jogador = ? AND id_jogo = ?";
 
 		try (Connection conexao = DatabaseConnection.getConnection()) {
 			try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-				stmt.setInt(1, jogador.getId());
-				stmt.setInt(2, jogo.getId());
+				stmt.setInt(1, jj.getJogador().getId());
+				stmt.setInt(2, jj.getJogo().getId());
 				stmt.executeUpdate();
 			}
 		}

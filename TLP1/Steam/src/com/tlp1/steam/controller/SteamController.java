@@ -8,6 +8,7 @@ import java.util.List;
 import com.tlp1.steam.model.AlreadyPurchasedGameExeption;
 import com.tlp1.steam.model.Jogador;
 import com.tlp1.steam.model.JogadorDAO;
+import com.tlp1.steam.model.Jogador_Jogo;
 import com.tlp1.steam.model.Jogador_JogoDAO;
 import com.tlp1.steam.model.Jogo;
 import com.tlp1.steam.model.JogoDAO;
@@ -128,7 +129,8 @@ public class SteamController {
                 String confirmacao = view.lerString();
                 switch (confirmacao) {
                     case "y", "Y":
-                        jogador_jogoDAO.comprarJogo(jogos.get(0), jogador);
+                        Jogador_Jogo jj = new Jogador_Jogo(jogador, jogos.get(0));
+                        jogador_jogoDAO.comprarJogo(jj);
                         view.pauseComMsg("Jogo adicionado à sua biblioteca.");
                         io = false;
                         return;
@@ -160,7 +162,8 @@ public class SteamController {
                     String confirmacao = view.lerString();
                     switch (confirmacao) {
                         case "y", "Y":
-                            jogador_jogoDAO.comprarJogo(jogos.get(j-1), jogador);
+                            Jogador_Jogo jj = new Jogador_Jogo(jogador, jogos.get(j-1));
+                            jogador_jogoDAO.comprarJogo(jj);
                             view.pauseComMsg("Jogo adicionado à sua biblioteca.");
                             return;
                         
@@ -261,7 +264,7 @@ public class SteamController {
 
     public void mostrarBiblioteca(Jogador jogador) throws SQLException, IOException, InterruptedException {
         boolean io = true;
-        while (io) {
+        while (true) {
             view.limparTela();
             int i = 1;
             ArrayList<Jogo> jogos = jogador_jogoDAO.mostrarBiblioteca(jogador);
@@ -283,17 +286,20 @@ public class SteamController {
             }
             view.limparTela();
 
-            while (true) {
+            while (io) {
                 try {
                     view.menuJogo(jogos.get(j-1));
                     int op = view.lerInt();
                     view.lerString();
                     switch (op) {
                         case 0:
+                            io = false;
                             break;
                         case 1:
-                            jogador_jogoDAO.reembolsarJogo(jogador, jogos.get(j-1));
+                            Jogador_Jogo jj = new Jogador_Jogo(jogador, jogos.get(j-1));
+                            jogador_jogoDAO.reembolsarJogo(jj);
                             view.pauseComMsg("Jogo reembolsado.");
+                            io = false;
                             return;
                         default:
                             view.pauseComMsg("Selecione uma opção válida.");
