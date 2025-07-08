@@ -1,0 +1,96 @@
+package com.estrutura.estado.view;
+
+import java.util.Scanner;
+
+public class PoliticaView {
+    private Scanner scanner;
+
+    public PoliticaView() {
+        scanner = new Scanner(System.in);
+    }
+
+    // Métodos de Menu Principal
+    public void mostrarMenuPrincipal() {
+        System.out.println("\n==== SISTEMA DE INFORMAÇÕES POLÍTICAS ====");
+        System.out.println("1. Cadastros Básicos");
+        System.out.println("2. Representantes Políticos");
+        System.out.println("3. Relatórios e Análises");
+        System.out.println("4. Sair");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    // Métodos para Cadastros Básicos
+    public void mostrarMenuCadastros() {
+        System.out.println("\n--- CADASTROS BÁSICOS ---");
+        System.out.println("1. Poder do Estado");
+        System.out.println("2. Nível de Governo");
+        System.out.println("3. Cargo Político");
+        System.out.println("4. Partido"); // meu
+        System.out.println("5. Voltar");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    public void mostrarSubmenu(String titulo) {
+        System.out.println("\n--- " + titulo + " ---"); //partidos
+        System.out.println("1. Cadastrar");
+        System.out.println("2. Listar");
+        System.out.println("3. Alterar");
+        System.out.println("4. Excluir");
+        System.out.println("5. Voltar");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    // Métodos para Representantes Políticos
+    public void mostrarMenuRepresentantes() {
+        System.out.println("\n--- REPRESENTANTES POLÍTICOS ---");
+        System.out.println("1. Cadastrar Representante");
+        System.out.println("2. Listar Todos Representantes");
+        System.out.println("3. Listar Prefeito e Vice");
+        System.out.println("4. Listar Vereadores");
+        System.out.println("5. Listar Deputados Estaduais");
+        System.out.println("6. Listar Deputados Federais");
+        System.out.println("7. Listar Senadores");
+        System.out.println("8. Voltar");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    // Métodos para Relatórios e Análises
+    public void mostrarMenuRelatorios() {
+        System.out.println("\n--- RELATÓRIOS E ANÁLISES ---");
+        System.out.println("1. Distribuição Partidária");
+        System.out.println("2. Representatividade por Orientação"); // meu
+        System.out.println("3. Responsabilidades por Cargo");
+        System.out.println("4. Listar Poderes do Estado");
+        System.out.println("5. Voltar");
+        System.out.print("Escolha uma opção: ");
+    }
+
+    // Métodos de Entrada de Dados
+    public int lerOpcao() {
+        return lerInteiro("Escolha uma opção:");
+    }
+
+    public int lerInteiro(String prompt) {
+        while (true) {
+            System.out.print(prompt + " ");
+            try {
+                int value = scanner.nextInt();
+                scanner.nextLine(); // Consume the rest of the line
+                return value;
+            } catch (java.util.InputMismatchException e) {
+                mostrarMensagem("Entrada inválida. Por favor, digite um número inteiro.");
+                scanner.nextLine(); // Consume the invalid input
+            }
+        }
+    }
+
+    public String lerTexto(String prompt) {
+        System.out.print(prompt + " ");
+        return scanner.nextLine();
+    }
+
+    public void mostrarMensagem(String mensagem) {
+        System.out.println(mensagem);
+    }
+
+}
