@@ -1,5 +1,6 @@
 package com.estrutura.estado.view;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 public class PoliticaView {
@@ -10,7 +11,8 @@ public class PoliticaView {
     }
 
     // Métodos de Menu Principal
-    public void mostrarMenuPrincipal() {
+    public void mostrarMenuPrincipal() throws IOException, InterruptedException {
+        limparTela();
         System.out.println("\n==== SISTEMA DE INFORMAÇÕES POLÍTICAS ====");
         System.out.println("1. Cadastros Básicos");
         System.out.println("2. Representantes Políticos");
@@ -20,7 +22,8 @@ public class PoliticaView {
     }
 
     // Métodos para Cadastros Básicos
-    public void mostrarMenuCadastros() {
+    public void mostrarMenuCadastros() throws IOException, InterruptedException {
+        limparTela();
         System.out.println("\n--- CADASTROS BÁSICOS ---");
         System.out.println("1. Poder do Estado");
         System.out.println("2. Nível de Governo");
@@ -30,7 +33,8 @@ public class PoliticaView {
         System.out.print("Escolha uma opção: ");
     }
 
-    public void mostrarSubmenu(String titulo) {
+    public void mostrarSubmenu(String titulo) throws IOException, InterruptedException {
+        limparTela();
         System.out.println("\n--- " + titulo + " ---"); //partidos
         System.out.println("1. Cadastrar");
         System.out.println("2. Listar");
@@ -55,7 +59,8 @@ public class PoliticaView {
     }
 
     // Métodos para Relatórios e Análises
-    public void mostrarMenuRelatorios() {
+    public void mostrarMenuRelatorios() throws IOException, InterruptedException {
+        limparTela();
         System.out.println("\n--- RELATÓRIOS E ANÁLISES ---");
         System.out.println("1. Distribuição Partidária");
         System.out.println("2. Representatividade por Orientação"); // meu
@@ -63,6 +68,16 @@ public class PoliticaView {
         System.out.println("4. Listar Poderes do Estado");
         System.out.println("5. Voltar");
         System.out.print("Escolha uma opção: ");
+    }
+
+    public void orientacoes() {
+        System.out.println("1 - Extrema-esquerda");
+        System.out.println("2 - Esquerda");
+        System.out.println("3 - Centro-esquerda");
+        System.out.println("4 - Centro");
+        System.out.println("5 - Centro-direita");
+        System.out.println("6 - Direita");
+        System.out.println("7 - Extrema-direita");
     }
 
     // Métodos de Entrada de Dados
@@ -92,5 +107,17 @@ public class PoliticaView {
     public void mostrarMensagem(String mensagem) {
         System.out.println(mensagem);
     }
+
+    public void pauseComMsg(String msg) throws IOException, InterruptedException {
+		limparTela();
+		System.out.println(msg);
+		System.out.println("Pressione Enter para continuar...");
+		scanner.nextLine();
+		limparTela();
+	}
+
+	public void limparTela() throws IOException, InterruptedException {
+		new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+	}
 
 }

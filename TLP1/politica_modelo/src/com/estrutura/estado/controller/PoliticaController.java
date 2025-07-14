@@ -1,5 +1,8 @@
 package com.estrutura.estado.controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import com.estrutura.estado.view.PoliticaView;
 
 public class PoliticaController {
@@ -10,7 +13,7 @@ public class PoliticaController {
         this.view = view;
     }
     
-    public void iniciar() {
+    public void iniciar() throws IOException, InterruptedException, SQLException{
         boolean sair = false;
         while (!sair) {
             view.mostrarMenuPrincipal();
@@ -36,7 +39,7 @@ public class PoliticaController {
         }
     }
     
-    private void menuCadastros() {
+    private void menuCadastros() throws IOException, InterruptedException, SQLException{
         boolean voltar = false;
         while (!voltar) {
             view.mostrarMenuCadastros();
@@ -64,7 +67,7 @@ public class PoliticaController {
         }
     }
 
-    private void submenuPoderEstado() {
+    private void submenuPoderEstado() throws IOException, InterruptedException {
         boolean voltar = false;
         while (!voltar) {
             view.mostrarSubmenu("PODER DO ESTADO");
@@ -92,7 +95,7 @@ public class PoliticaController {
         }
     }
 
-    private void submenuNivelGoverno() {
+    private void submenuNivelGoverno() throws IOException, InterruptedException {
         boolean voltar = false;
         while (!voltar) {
             view.mostrarSubmenu("NÍVEL DE GOVERNO");
@@ -120,7 +123,7 @@ public class PoliticaController {
         }
     }
 
-    private void submenuCargoPolitico() {
+    private void submenuCargoPolitico() throws IOException, InterruptedException {
         boolean voltar = false;
         while (!voltar) {
             view.mostrarSubmenu("CARGO POLÍTICO");
@@ -148,7 +151,7 @@ public class PoliticaController {
         }
     }
 
-    private void submenuPartido() {
+    private void submenuPartido() throws IOException, InterruptedException, SQLException { // meu
         boolean voltar = false;
         while (!voltar) {
             view.mostrarSubmenu("PARTIDO POLÍTICO");
@@ -156,7 +159,7 @@ public class PoliticaController {
             
             switch (opcao) {
                 case 1:
-                    //partido.cadastrarPartido();
+                    partido.cadastrarPartido();
                     break;
                 case 2:
                     //partido.listarPartidos();
@@ -213,7 +216,7 @@ public class PoliticaController {
         }
     }
 
-    private void menuRelatorios() {
+    private void menuRelatorios() throws IOException, InterruptedException {
         boolean voltar = false;
         while (!voltar) {
             view.mostrarMenuRelatorios();
