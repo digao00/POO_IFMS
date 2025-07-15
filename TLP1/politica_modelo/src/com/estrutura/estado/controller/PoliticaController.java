@@ -7,10 +7,11 @@ import com.estrutura.estado.view.PoliticaView;
 
 public class PoliticaController {
     private PoliticaView view;
-    private PartidoController partido = new PartidoController(view);
+    private PartidoController partido;
     
     public PoliticaController(PoliticaView view) {
         this.view = view;
+        this.partido = new PartidoController(view);
     }
     
     public void iniciar() throws IOException, InterruptedException, SQLException{
@@ -62,7 +63,7 @@ public class PoliticaController {
                     voltar = true;
                     break;
                 default:
-                    view.mostrarMensagem("Opção inválida!");
+                    view.pauseComMsg("Opção inválida!");
             }
         }
     }
@@ -250,7 +251,7 @@ public class PoliticaController {
         }
     }
     
-    private void mostrarRepresentatividadeOrientacao() {
-        
+    private void mostrarRepresentatividadePorOientacao() {
+        // SELECT COUNT(*) FROM public.representantes_cg, public.partidos WHERE representantes_cg.id_partido = partidos.id_partido AND partidos.orientacao = 'CENTRO';
     }
 }

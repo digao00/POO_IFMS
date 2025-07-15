@@ -18,7 +18,6 @@ public class PoliticaView {
         System.out.println("2. Representantes Políticos");
         System.out.println("3. Relatórios e Análises");
         System.out.println("4. Sair");
-        System.out.print("Escolha uma opção: ");
     }
 
     // Métodos para Cadastros Básicos
@@ -30,7 +29,6 @@ public class PoliticaView {
         System.out.println("3. Cargo Político");
         System.out.println("4. Partido"); // meu
         System.out.println("5. Voltar");
-        System.out.print("Escolha uma opção: ");
     }
 
     public void mostrarSubmenu(String titulo) throws IOException, InterruptedException {
@@ -41,7 +39,6 @@ public class PoliticaView {
         System.out.println("3. Alterar");
         System.out.println("4. Excluir");
         System.out.println("5. Voltar");
-        System.out.print("Escolha uma opção: ");
     }
 
     // Métodos para Representantes Políticos
@@ -55,7 +52,6 @@ public class PoliticaView {
         System.out.println("6. Listar Deputados Federais");
         System.out.println("7. Listar Senadores");
         System.out.println("8. Voltar");
-        System.out.print("Escolha uma opção: ");
     }
 
     // Métodos para Relatórios e Análises
@@ -67,7 +63,6 @@ public class PoliticaView {
         System.out.println("3. Responsabilidades por Cargo");
         System.out.println("4. Listar Poderes do Estado");
         System.out.println("5. Voltar");
-        System.out.print("Escolha uma opção: ");
     }
 
     public void orientacoes() {
@@ -93,8 +88,8 @@ public class PoliticaView {
                 scanner.nextLine(); // Consume the rest of the line
                 return value;
             } catch (java.util.InputMismatchException e) {
-                mostrarMensagem("Entrada inválida. Por favor, digite um número inteiro.");
                 scanner.nextLine(); // Consume the invalid input
+                return -1;
             }
         }
     }

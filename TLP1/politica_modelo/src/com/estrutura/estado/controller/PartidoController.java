@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import com.estrutura.estado.model.AlreadyCreatedPartidoExeption;
 import com.estrutura.estado.model.Partido;
+import com.estrutura.estado.model.PartidoBeingUsedException;
 import com.estrutura.estado.model.PartidoNotFoundExeption;
 import com.estrutura.estado.model.dao.PartidoDAO;
 import com.estrutura.estado.view.PoliticaView;
@@ -51,11 +52,15 @@ public class PartidoController {
                     break;
                 default:
                     view.limparTela();
-                    view.mostrarMensagem("Selecione uma orientação válido");
+                    view.pauseComMsg("Selecione uma orientação válido");
                     break;
             }
         }
         Partido p = new Partido(sigla, nome, orientacao);
+        if (p.getSigla().isEmpty() || p.getNome_completo().isEmpty()) {
+            view.pauseComMsg("Sigla ou nome do partido invalidos");
+            return;
+        }
         try {
             dao.cadastrarPartido(p);
             view.pauseComMsg("Partido Cadastrado");
@@ -67,18 +72,17 @@ public class PartidoController {
     public void listarPartidos() throws IOException, InterruptedException, SQLException {
         view.limparTela();
         view.mostrarMensagem("PARTIDOS");
-        int i = 1;
         for (Partido partido : dao.listarPartidos()) {
-            view.printf("\n%d\n", i);
+            view.printf("\nID = %d\n", partido.getId());
             view.printf("Nome: %s\nSigla: %s\nOrientação: %s\n", partido.getNome_completo(), partido.getSigla(), partido.getOrientacao());
-            i++;
         }
-        view.pauseComMsg(null);
+        view.mostrarMensagem("\nPressione Enter para continuar...");
+        view.lerTexto("");
     }
 
     public void alterarPartido() throws IOException, InterruptedException, SQLException {
         view.limparTela();
-        int id = view.lerInteiro("\n Digite o id do partido que queira alternar: ");
+        int id = view.lerInteiro("\nDigite o id do partido que queira alternar: ");
         try {
             Partido partido = dao.acharPartido(id);
             view.limparTela();
@@ -87,7 +91,7 @@ public class PartidoController {
             String nome = view.lerTexto("\n Digite o novo nome do partido: ");
             partido.setNome_completo(nome);
 
-            view.printf("Sigla atual: %s", partido.getSigla());
+            view.printf("\nSigla atual: %s", partido.getSigla());
             String sigla = view.lerTexto("\nDigite a sigla do partido: ");
             partido.setSigla(sigla);
 
@@ -142,6 +146,8 @@ public class PartidoController {
             dao.excluirPartido(dao.acharPartido(id));
             view.pauseComMsg("Partido deletado.");
         } catch (PartidoNotFoundExeption e) {
+            view.pauseComMsg(e.getMessage());
+        } catch (PartidoBeingUsedException e) {
             view.pauseComMsg(e.getMessage());
         }
     }
