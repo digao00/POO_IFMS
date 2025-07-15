@@ -100,12 +100,16 @@ public class PoliticaView {
     }
 
     public String lerTexto(String prompt) {
-        System.out.print(prompt + " ");
+        System.out.printf(prompt + " ");
         return scanner.nextLine();
     }
 
     public void mostrarMensagem(String mensagem) {
         System.out.println(mensagem);
+    }
+
+    public void printf(String format, Object ... args) {
+        System.out.printf(format, args);
     }
 
     public void pauseComMsg(String msg) throws IOException, InterruptedException {

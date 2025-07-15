@@ -34,7 +34,7 @@ public class PoliticaController {
                     view.mostrarMensagem("Saindo do sistema...");
                     break;
                 default:
-                    view.mostrarMensagem("Opção inválida!");
+                    view.pauseComMsg("Opção inválida!");
             }
         }
     }
@@ -162,10 +162,10 @@ public class PoliticaController {
                     partido.cadastrarPartido();
                     break;
                 case 2:
-                    //partido.listarPartidos();
+                    partido.listarPartidos();
                     break;
                 case 3:
-                    //partido.alterarPartido();
+                    partido.alterarPartido();
                     break;
                 case 4:
                     //partido.excluirPartido();
@@ -174,7 +174,7 @@ public class PoliticaController {
                     voltar = true;
                     break;
                 default:
-                    view.mostrarMensagem("Opção inválida!");
+                    view.pauseComMsg("Opção inválida!");
             }
         }
     }
