@@ -168,7 +168,7 @@ public class PoliticaController {
                     partido.alterarPartido();
                     break;
                 case 4:
-                    //partido.excluirPartido();
+                    partido.excluirPartido();
                     break;
                 case 5:
                     voltar = true;
@@ -250,4 +250,7 @@ public class PoliticaController {
         }
     }
     
+    private void mostrarRepresentatividadeOrientacao() {
+        
+    }
 }

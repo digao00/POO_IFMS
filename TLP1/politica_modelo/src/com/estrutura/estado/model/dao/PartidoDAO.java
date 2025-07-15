@@ -60,12 +60,13 @@ public class PartidoDAO {
             }
         }
     }
+
     public Partido acharPartido(int id) throws SQLException, PartidoNotFoundExeption {
         try (Connection conexao = DatabaseConnection.getConnection()) {
-            String sql2 = "SELECT * FROM partidos WHERE id_partido = ?";
-            try (PreparedStatement stmt2 = conexao.prepareStatement(sql2)) {
-                stmt2.setInt(1, id);
-                ResultSet rs = stmt2.executeQuery();
+            String sql = "SELECT * FROM partidos WHERE id_partido = ?";
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setInt(1, id);
+                ResultSet rs = stmt.executeQuery();
                 if (!rs.next()) {
                     throw new PartidoNotFoundExeption("Partido não encontrado");
                 }
@@ -74,6 +75,17 @@ public class PartidoDAO {
                     p.setId(rs.getInt(1));
                     return p;
                 }
+            }
+        }
+    }
+
+    public void excluirPartido(Partido partido) throws SQLException {
+        try (Connection conexao = DatabaseConnection.getConnection()) {
+            
+            String sql = "DELETE FROM partidos WHERE id_partido = ?";
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setInt(1, partido.getId());
+                stmt.executeUpdate();
             }
         }
     }

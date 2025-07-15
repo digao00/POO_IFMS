@@ -82,14 +82,19 @@ public class PartidoController {
         try {
             Partido partido = dao.acharPartido(id);
             view.limparTela();
+
             view.printf("\nNome atual: %s", partido.getNome_completo());
             String nome = view.lerTexto("\n Digite o novo nome do partido: ");
+            partido.setNome_completo(nome);
+
             view.printf("Sigla atual: %s", partido.getSigla());
             String sigla = view.lerTexto("\nDigite a sigla do partido: ");
+            partido.setSigla(sigla);
+
             String orientacao = null;
             while (orientacao == null) {
                 view.limparTela();
-                view.printf("Orientação atuaç: %s", partido.getOrientacao());
+                view.printf("Orientação atual: %s", partido.getOrientacao());
                 view.mostrarMensagem("\nSelecione a orientação do partido:");
                 view.orientacoes();
                 int op = view.lerOpcao();
@@ -121,11 +126,23 @@ public class PartidoController {
                         break;
                 }   
             }
+            partido.setOrientacao(orientacao);
             dao.alterarPartido(partido);
             view.pauseComMsg("Partido alterado.");
         } catch (PartidoNotFoundExeption e) {
             view.pauseComMsg(e.getMessage());
             //return;
+        }
+    }
+
+    public void excluirPartido() throws IOException, InterruptedException, SQLException {
+        view.limparTela();
+        int id = view.lerInteiro("\n Digite o id do partido que queira deletar: ");
+        try {
+            dao.excluirPartido(dao.acharPartido(id));
+            view.pauseComMsg("Partido deletado.");
+        } catch (PartidoNotFoundExeption e) {
+            view.pauseComMsg(e.getMessage());
         }
     }
 }
