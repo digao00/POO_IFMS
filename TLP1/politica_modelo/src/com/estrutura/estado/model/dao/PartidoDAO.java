@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 import com.estrutura.estado.model.AlreadyCreatedPartidoExeption;
 import com.estrutura.estado.model.Partido;
@@ -43,7 +45,7 @@ public class PartidoDAO {
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                     Partido p = new Partido(rs.getString(2), rs.getString(3), rs.getString(4));
-                    p.setId(rs.getInt(1));
+                    p.setId(Integer.valueOf(rs.getInt(1)));
                     partidos.add(p);
                 }
                 return partidos;
@@ -74,7 +76,7 @@ public class PartidoDAO {
                     throw new PartidoNotFoundExeption("Partido não encontrado");
                 } else {
                     Partido p = new Partido(rs.getString(2), rs.getString(3), rs.getString(4));
-                    p.setId(rs.getInt(1));
+                    p.setId(Integer.valueOf(rs.getInt(1)));
                     return p;
                 }
             }
@@ -89,7 +91,7 @@ public class PartidoDAO {
                 stmt2.setInt(1, partido.getId());
                 ResultSet rs = stmt2.executeQuery();
                 while (rs.next()) {
-                    if (rs.getInt(1) > 0) {
+                    if (Integer.valueOf(rs.getInt(1)) > 0) {
                         throw new PartidoBeingUsedException("Partido está sendo usado por representantes.\nNão foi possível deletar partido.");
                     }
                 }
@@ -101,16 +103,81 @@ public class PartidoDAO {
         }
     }
 
-    public ArrayList<Integer> mostrarRepresentatividadePorOientacao() throws SQLException {
-        ArrayList<Integer> orientacoes = new ArrayList<>();
+    public int numRepresentantes() throws SQLException {
+        try (Connection conexao = DatabaseConnection.getConnection()) {
+            int numRepresentantes = 0;
+            String sql = "SELECT COUNT(*) FROM public.representantes_cg";
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    numRepresentantes = rs.getInt(1);
+                }
+            }
+            return numRepresentantes;
+        }
+    }
+
+    public HashMap<String, Integer> representantesPorOrientacao() throws SQLException {
+        HashMap<String, Integer> orientacoesRep = new HashMap<>();
         try (Connection conexao = DatabaseConnection.getConnection()) {
             String sql = "SELECT COUNT(*) FROM public.representantes_cg, public.partidos WHERE representantes_cg.id_partido = partidos.id_partido AND partidos.orientacao = ?";
+
             try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
                 stmt.setString(1, "EXTREMA-ESQUERDA");
                 ResultSet rs = stmt.executeQuery();
-                return orientacoes;
-                // continuar
+                while (rs.next()) {
+                    orientacoesRep.put("EXTREMA-ESQUERDA", Integer.valueOf(rs.getInt(1)));
+                }
+            }
+
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setString(1, "ESQUERDA");
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    orientacoesRep.put("ESQUERDA", Integer.valueOf(rs.getInt(1)));
+                }
+            }
+
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setString(1, "CENTRO-ESQUERDA");
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    orientacoesRep.put("CENTRO-ESQUERDA", Integer.valueOf(rs.getInt(1)));
+                }
+            }
+
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setString(1, "CENTRO");
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    orientacoesRep.put("CENTRO", Integer.valueOf(rs.getInt(1)));
+                }
+            }
+
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setString(1, "CENTRO-DIREITA");
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    orientacoesRep.put("CENTRO-DIREITA", Integer.valueOf(rs.getInt(1)));
+                }
+            }
+
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setString(1, "DIREITA");
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    orientacoesRep.put("DIREITA", Integer.valueOf(rs.getInt(1)));
+                }
+            }
+
+            try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+                stmt.setString(1, "EXTREMA-DIREITA");
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    orientacoesRep.put("EXTREMA-DIREITA", Integer.valueOf(rs.getInt(1)));
+                }
             }
         }
+        return orientacoesRep;
     }
 }

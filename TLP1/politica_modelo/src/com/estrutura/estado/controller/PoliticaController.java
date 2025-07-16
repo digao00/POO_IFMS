@@ -40,7 +40,7 @@ public class PoliticaController {
         }
     }
     
-    private void menuCadastros() throws IOException, InterruptedException, SQLException{
+    private void menuCadastros() throws IOException, InterruptedException, SQLException {
         boolean voltar = false;
         while (!voltar) {
             view.mostrarMenuCadastros();
@@ -217,7 +217,7 @@ public class PoliticaController {
         }
     }
 
-    private void menuRelatorios() throws IOException, InterruptedException {
+    private void menuRelatorios() throws IOException, InterruptedException, SQLException {
         boolean voltar = false;
         while (!voltar) {
             view.mostrarMenuRelatorios();
@@ -228,7 +228,7 @@ public class PoliticaController {
                     //mostrarDistribuicaoPartidaria();
                     break;
                 case 2:
-                    //mostrarRepresentatividadeOrientacao(); -> meu
+                    partido.mostrarRepresentatividadePorOientacao();
                     break;
                 case 3:
                     //listarResponsabilidadesCargos();
@@ -249,9 +249,5 @@ public class PoliticaController {
                     view.mostrarMensagem("Opção inválida!");
             }
         }
-    }
-    
-    private void mostrarRepresentatividadePorOientacao() {
-        // SELECT COUNT(*) FROM public.representantes_cg, public.partidos WHERE representantes_cg.id_partido = partidos.id_partido AND partidos.orientacao = 'CENTRO';
     }
 }

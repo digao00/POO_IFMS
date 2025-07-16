@@ -2,6 +2,7 @@ package com.estrutura.estado.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Map;
 
 import com.estrutura.estado.model.AlreadyCreatedPartidoExeption;
 import com.estrutura.estado.model.Partido;
@@ -51,7 +52,6 @@ public class PartidoController {
                     orientacao = "EXTREMA-DIREITA";
                     break;
                 default:
-                    view.limparTela();
                     view.pauseComMsg("Selecione uma orientação válido");
                     break;
             }
@@ -150,5 +150,17 @@ public class PartidoController {
         } catch (PartidoBeingUsedException e) {
             view.pauseComMsg(e.getMessage());
         }
+    }
+
+    public void mostrarRepresentatividadePorOientacao() throws IOException, InterruptedException, SQLException {
+        view.limparTela();
+        int numRepresentantes = dao.numRepresentantes();
+        view.printf("Número de Representantes: %d\n", numRepresentantes);
+
+        for (Map.Entry<String, Integer> entry : dao.representantesPorOrientacao().entrySet()) {
+            view.printf("%s:\t %.1f%%\n", entry.getKey(), (float)entry.getValue()/numRepresentantes*100);
+        }
+        view.lerTexto("\nPressione Enter para continuar.");
+        //dao.representantesPorOrientacao().forEach((orientacao, num) -> view.printf("%s:\t %d%%\n", orientacao, (float)num/numRepresentantes*100));
     }
 }
