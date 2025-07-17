@@ -5,8 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-
+import java.util.LinkedHashMap;
 
 import com.estrutura.estado.model.AlreadyCreatedPartidoExeption;
 import com.estrutura.estado.model.Partido;
@@ -45,7 +44,7 @@ public class PartidoDAO {
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
                     Partido p = new Partido(rs.getString(2), rs.getString(3), rs.getString(4));
-                    p.setId(Integer.valueOf(rs.getInt(1)));
+                    p.setId(rs.getInt(1));
                     partidos.add(p);
                 }
                 return partidos;
@@ -76,7 +75,7 @@ public class PartidoDAO {
                     throw new PartidoNotFoundExeption("Partido não encontrado");
                 } else {
                     Partido p = new Partido(rs.getString(2), rs.getString(3), rs.getString(4));
-                    p.setId(Integer.valueOf(rs.getInt(1)));
+                    p.setId(rs.getInt(1));
                     return p;
                 }
             }
@@ -91,7 +90,7 @@ public class PartidoDAO {
                 stmt2.setInt(1, partido.getId());
                 ResultSet rs = stmt2.executeQuery();
                 while (rs.next()) {
-                    if (Integer.valueOf(rs.getInt(1)) > 0) {
+                    if (rs.getInt(1) > 0) {
                         throw new PartidoBeingUsedException("Partido está sendo usado por representantes.\nNão foi possível deletar partido.");
                     }
                 }
@@ -117,8 +116,9 @@ public class PartidoDAO {
         }
     }
 
-    public HashMap<String, Integer> representantesPorOrientacao() throws SQLException {
-        HashMap<String, Integer> orientacoesRep = new HashMap<>();
+    public LinkedHashMap<String, Integer> representantesPorOrientacao() throws SQLException {
+        LinkedHashMap<String, Integer> orientacoesRep = new LinkedHashMap<>();
+        
         try (Connection conexao = DatabaseConnection.getConnection()) {
             String sql = "SELECT COUNT(*) FROM public.representantes_cg, public.partidos WHERE representantes_cg.id_partido = partidos.id_partido AND partidos.orientacao = ?";
 
@@ -126,7 +126,7 @@ public class PartidoDAO {
                 stmt.setString(1, "EXTREMA-ESQUERDA");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    orientacoesRep.put("EXTREMA-ESQUERDA", Integer.valueOf(rs.getInt(1)));
+                    orientacoesRep.put("EXTREMA-ESQUERDA", rs.getInt(1));
                 }
             }
 
@@ -134,7 +134,7 @@ public class PartidoDAO {
                 stmt.setString(1, "ESQUERDA");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    orientacoesRep.put("ESQUERDA", Integer.valueOf(rs.getInt(1)));
+                    orientacoesRep.put("ESQUERDA", rs.getInt(1));
                 }
             }
 
@@ -142,7 +142,7 @@ public class PartidoDAO {
                 stmt.setString(1, "CENTRO-ESQUERDA");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    orientacoesRep.put("CENTRO-ESQUERDA", Integer.valueOf(rs.getInt(1)));
+                    orientacoesRep.put("CENTRO-ESQUERDA", rs.getInt(1));
                 }
             }
 
@@ -150,7 +150,7 @@ public class PartidoDAO {
                 stmt.setString(1, "CENTRO");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    orientacoesRep.put("CENTRO", Integer.valueOf(rs.getInt(1)));
+                    orientacoesRep.put("CENTRO", rs.getInt(1));
                 }
             }
 
@@ -158,7 +158,7 @@ public class PartidoDAO {
                 stmt.setString(1, "CENTRO-DIREITA");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    orientacoesRep.put("CENTRO-DIREITA", Integer.valueOf(rs.getInt(1)));
+                    orientacoesRep.put("CENTRO-DIREITA", rs.getInt(1));
                 }
             }
 
@@ -166,7 +166,7 @@ public class PartidoDAO {
                 stmt.setString(1, "DIREITA");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    orientacoesRep.put("DIREITA", Integer.valueOf(rs.getInt(1)));
+                    orientacoesRep.put("DIREITA", rs.getInt(1));
                 }
             }
 
@@ -174,7 +174,7 @@ public class PartidoDAO {
                 stmt.setString(1, "EXTREMA-DIREITA");
                 ResultSet rs = stmt.executeQuery();
                 while (rs.next()) {
-                    orientacoesRep.put("EXTREMA-DIREITA", Integer.valueOf(rs.getInt(1)));
+                    orientacoesRep.put("EXTREMA-DIREITA", rs.getInt(1));
                 }
             }
         }

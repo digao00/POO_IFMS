@@ -222,7 +222,7 @@ public class PoliticaController {
         while (!voltar) {
             view.mostrarMenuRelatorios();
             int opcao = view.lerOpcao();
-            
+            //prof, esse switch ta diferente do que mostra no menu 
             switch (opcao) {
                 case 1:
                     //mostrarDistribuicaoPartidaria();
@@ -233,20 +233,23 @@ public class PoliticaController {
                 case 3:
                     //listarResponsabilidadesCargos();
                     break;
-                case 4:
+
+                //esses daqui não ta no menu então comentei
+                /*case 4:
                     //mostrarHierarquiaPoder();
                     break;
-                case 5:
+                case 7:
                     //mostrarComparativoMandatos();
-                    break;
-                case 6:
+                    break;*/
+
+                case 4:
                     //listarPoderesEstado();
                     break;
-                case 7:
+                case 5:
                     voltar = true;
                     break;
                 default:
-                    view.mostrarMensagem("Opção inválida!");
+                    view.pauseComMsg("Opção inválida!");
             }
         }
     }

@@ -2,7 +2,6 @@ package com.estrutura.estado.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Map;
 
 import com.estrutura.estado.model.AlreadyCreatedPartidoExeption;
 import com.estrutura.estado.model.Partido;
@@ -21,7 +20,7 @@ public class PartidoController {
 
     public void cadastrarPartido() throws IOException, InterruptedException, SQLException {
         view.limparTela();
-        String nome = view.lerTexto("\n Digite o nome do partido: ");
+        String nome = view.lerTexto("\nDigite o nome do partido: ");
         String sigla = view.lerTexto("\nDigite a sigla do partido: ");
         String orientacao = null;
         while (orientacao == null) {
@@ -88,7 +87,7 @@ public class PartidoController {
             view.limparTela();
 
             view.printf("\nNome atual: %s", partido.getNome_completo());
-            String nome = view.lerTexto("\n Digite o novo nome do partido: ");
+            String nome = view.lerTexto("\nDigite o novo nome do partido: ");
             partido.setNome_completo(nome);
 
             view.printf("\nSigla atual: %s", partido.getSigla());
@@ -157,10 +156,9 @@ public class PartidoController {
         int numRepresentantes = dao.numRepresentantes();
         view.printf("Número de Representantes: %d\n", numRepresentantes);
 
-        for (Map.Entry<String, Integer> entry : dao.representantesPorOrientacao().entrySet()) {
-            view.printf("%s:\t %.1f%%\n", entry.getKey(), (float)entry.getValue()/numRepresentantes*100);
-        }
+        //a linha 161 vai printar cada elemento do Map, igual um foreach. A classe Map tem um próprio método pra isso, como da pra ver
+        dao.representantesPorOrientacao().forEach((orientacao, qtde) -> view.printf("%-17s\t%.1f%%\n", orientacao + ":", (float)qtde/numRepresentantes*100));
+
         view.lerTexto("\nPressione Enter para continuar.");
-        //dao.representantesPorOrientacao().forEach((orientacao, num) -> view.printf("%s:\t %d%%\n", orientacao, (float)num/numRepresentantes*100));
     }
 }

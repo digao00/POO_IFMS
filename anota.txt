@@ -1,5 +1,13 @@
+git remote rm origin
 git config --global --unset user.name
 git config --global --unset user.email
 git config --global --unset credential.helper
 
 cmdkey /delete:LegacyGeneric:target=git:https://github.com
+
+
+simplesmente achei foda e quis guardar:
+/*for (Map.Entry<String, Integer> entry : mapa.entrySet()) {
+            System.out.printf("%s %d", entry.getKey(), entry.getValue());
+        }*/
+//dao.representantesPorOrientacao().forEach((orientacao, qtde) -> view.printf("%-17s\t%.1f%%\n", orientacao + ":", (float)qtde/numRepresentantes*100));
