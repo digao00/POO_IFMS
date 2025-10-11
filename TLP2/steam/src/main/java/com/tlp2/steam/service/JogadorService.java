@@ -12,7 +12,7 @@ public class JogadorService {
     @Autowired
     private JogadorRepository jogadorRepository;
 
-    public  Jogador criarJogador(Jogador jogador) {
+    public Jogador criarJogador(Jogador jogador) {
         return jogadorRepository.save(jogador);
     }
 }

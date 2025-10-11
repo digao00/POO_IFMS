@@ -1,9 +1,15 @@
 package com.tlp2.steam.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -20,6 +26,22 @@ public class Jogador {
 	
 	@Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
 	private String senha;
+
+	@ManyToMany
+    @JoinTable(
+        name = "jogador_jogo",
+        joinColumns = @JoinColumn(name = "jogador_id"),
+        inverseJoinColumns = @JoinColumn(name = "jogo_id")
+    )
+    private List<Jogo> jogos = new ArrayList<>();
+
+	public List<Jogo> getJogos() {
+		return jogos;
+	}
+
+	public void setJogos(List<Jogo> jogos) {
+		this.jogos = jogos;
+	}
 
 	public String getSenha() {
 		return senha;
