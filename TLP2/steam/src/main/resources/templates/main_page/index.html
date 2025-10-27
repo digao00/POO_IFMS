@@ -52,12 +52,14 @@
 
 <div style="display: flex; flex-direction: row; justify-content: space-evenly;  align-items: center; margin: 30px;" class="flex-wrap">
 
-  <div class="card" style="width: 18rem;" th:each="jogo : ${jogos}">
+  <div class="card" style="width: 18rem; height: 30rem;" th:each="jogo : ${jogos}">
     <img th:src="${jogo.imagemUrl}" class="card-img-top" alt="cover">
-    <div class="card-body">
-      <h5 class="card-title" th:text="${jogo.titulo}"></h5>
-      <p class="card-text" th:text="${jogo.descricao}"></p>
-      <a href="#" class="btn btn-primary">Comprar</a>
+    <div class="card-body d-flex row" style="align-content: space-between;">
+      <div>
+        <h5 class="card-title" th:text="${jogo.titulo}"></h5>
+        <p class="card-text" th:text="${jogo.descricao}"></p>
+      </div>
+      <a href="#" class="btn btn-primary" style="width: 6rem; margin-left: 12px;">Comprar</a>
     </div>
   </div>
 
