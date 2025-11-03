@@ -48,7 +48,17 @@
         </form>
       </div>
     </div>
+    <button class="btn-delete"
+    th:href="@{/apagar/{id}(id=${jogadorID})}"
+    th:data-confirm-delete="|Você gostaria de apagar sua conta?|"
+    th:onclick="if (!confirm(this.getAttribute('data-confirm-delete'))) return false"
+    >
+
+    </button>
   </nav>
+
+						
+            
 
 <div style="display: flex; flex-direction: row; justify-content: space-evenly;  align-items: center; margin: 30px;" class="flex-wrap">
 

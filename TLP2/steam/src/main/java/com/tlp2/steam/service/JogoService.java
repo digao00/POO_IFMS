@@ -14,7 +14,7 @@ public class JogoService {
     @Autowired
     private JogoRepository jogoRepository;
 
-    public List<Jogo> listarJogos() { //comecei o "read" mas não testei a fundo, até agora só o create para a classe "jogador" está pronto
+    public List<Jogo> listarJogos() {
         return jogoRepository.findAll();
     }
 }
